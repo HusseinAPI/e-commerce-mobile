@@ -7,18 +7,17 @@ import {
 } from 'react-native';
 import tw from 'twrnc';
 import { NavigationContainer } from '@react-navigation/native';
-import AppNavigator from './android/app/src/navigation/AppNavigator';
+import Navbar from './android/app/src/components/Navbar';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <NavigationContainer>
-      <AppNavigator />
       <View style={styles.container}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <Text style={styles.title}>Hello !</Text>
-        <Text style={tw`text-lg text-blue-800 font-bold`}>Hello !</Text>
+        <Navbar />
       </View>
     </NavigationContainer>
   );
@@ -27,7 +26,7 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffe',
+    backgroundColor: '#ffffe8ff',
   },
   title: {
     fontSize: 30,
