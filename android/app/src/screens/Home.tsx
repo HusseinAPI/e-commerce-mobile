@@ -1,0 +1,142 @@
+import React from 'react';
+import { View, Text, StyleSheet, TextInput, FlatList,Pressable } from 'react-native';
+import CartIcon from 'react-native-vector-icons/Ionicons';
+import UserIcon from 'react-native-vector-icons/FontAwesome5';
+import SearchIcon from 'react-native-vector-icons/Feather';
+import ComputerIcon from 'react-native-vector-icons/MaterialIcons';
+import WatchIcon from 'react-native-vector-icons/Feather';
+import TshirtIcon from 'react-native-vector-icons/FontAwesome5';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MobileIcon from 'react-native-vector-icons/FontAwesome';
+import HeadphoneIcon from 'react-native-vector-icons/Feather';
+
+export default function Home() {
+  const categories = [
+    { id: 1, name: 'Computer', iconName: 'computer', icon: ComputerIcon },
+    { id: 2, name: 'Accesories', iconName: 'watch', icon: WatchIcon },
+    { id: 3, name: 'Shoes', iconName: 'shoe-sneaker', icon: MaterialCommunityIcons },
+    { id: 4, name: 'Mobile', iconName: 'mobile', icon: MobileIcon },
+    { id: 5, name: 'Music', iconName: 'headphones', icon: MaterialCommunityIcons },
+    { id: 6, name: 'Clothes', iconName: 'tshirt', icon: TshirtIcon },
+    { id: 7, name: 'Others', iconName: 'devices', icon: MaterialCommunityIcons },
+  ];
+
+  return (
+    <>
+      <View style={styles.card}>
+        <Text style={{ fontSize: 22, fontWeight: 600, marginLeft: 135 }}>
+          Home
+        </Text>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={[styles.cartIconContainer, { marginRight: 10 }]}>
+            <CartIcon name="cart" size={24} color="#cdcdcdff" />
+          </View>
+          <View style={styles.cartIconContainer}>
+            <UserIcon name="user" size={20} color="#cdcdcdff" />
+          </View>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="Search..."
+            placeholderTextColor="#cdcdcdff"
+          />
+          <SearchIcon
+            name="search"
+            size={20}
+            color="#cdcdcdff"
+            style={{ marginTop: 8 }}
+          />
+        </View>
+      </View>
+      <View style={styles.list}>
+        <FlatList
+          data={categories}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => {
+            const Icon = item.icon;
+            return (
+              <Pressable
+                  style={({ pressed }) => [
+                    styles.category,
+                    pressed && styles.categoryHover,
+                  ]}
+                >
+                  {({ pressed }) => (
+                    <>
+                      <Icon
+                        name={item.iconName}
+                        size={20}
+                        color={pressed ? '#ffffff' : '#3b3232ff'} // icon color
+                      />
+                     <Text style={[styles.text, { color: pressed ? '#ffffff' : '#3b3232ff' }]}>
+                        {item.name}
+                      </Text>
+                    </>
+                  )}
+              </Pressable>
+            );
+          }}
+        />
+      </View>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    width: '100%',
+    height: 100,
+    padding: 15,
+    marginTop: 15,
+  },
+  cartIconContainer: {
+    padding: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    padding: 5,
+    paddingRight: 5,
+    marginLeft: 8,
+    width: '97%',
+    borderRadius: 10,
+    marginTop: 20,
+    color: '#cdcdcdff',
+  },
+  inputText: {
+    padding: 10,
+    width: '90%',
+    color: '#cdcdcdff',
+  },
+  list: {
+    marginLeft: 22,
+    height: 130,
+  },
+  category: {
+    width: 100,
+    height: 50,
+    backgroundColor: '#ffffff',
+    marginTop: 50,
+    marginRight: 10,
+    padding: 10,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  categoryHover:{
+    backgroundColor:'#ff8674ff'
+  },
+  text: {
+    color: '#827b7bff',
+    fontWeight: 'bold',
+  },
+});

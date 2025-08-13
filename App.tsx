@@ -1,13 +1,7 @@
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import tw from 'twrnc';
+import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Navbar from './android/app/src/components/Navbar';
+import Home from './android/app/src/screens/Home';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -15,8 +9,8 @@ function App() {
   return (
     <NavigationContainer>
       <View style={styles.container}>
+        <Home />
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <Text style={styles.title}>Hello !</Text>
         <Navbar />
       </View>
     </NavigationContainer>
@@ -26,7 +20,7 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffe8ff',
+    backgroundColor: '#edededff',
   },
   title: {
     fontSize: 30,
