@@ -1,5 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList,Pressable } from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  Pressable,
+  ScrollView,
+} from 'react-native';
 import CartIcon from 'react-native-vector-icons/Ionicons';
 import UserIcon from 'react-native-vector-icons/FontAwesome5';
 import SearchIcon from 'react-native-vector-icons/Feather';
@@ -8,25 +16,41 @@ import WatchIcon from 'react-native-vector-icons/Feather';
 import TshirtIcon from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MobileIcon from 'react-native-vector-icons/FontAwesome';
-import HeadphoneIcon from 'react-native-vector-icons/Feather';
+import VoltiqueTitle from '../components/Title';
+import Product from '../components/Product';
 
 export default function Home() {
   const categories = [
     { id: 1, name: 'Computer', iconName: 'computer', icon: ComputerIcon },
     { id: 2, name: 'Accesories', iconName: 'watch', icon: WatchIcon },
-    { id: 3, name: 'Shoes', iconName: 'shoe-sneaker', icon: MaterialCommunityIcons },
+    {
+      id: 3,
+      name: 'Shoes',
+      iconName: 'shoe-sneaker',
+      icon: MaterialCommunityIcons,
+    },
     { id: 4, name: 'Mobile', iconName: 'mobile', icon: MobileIcon },
-    { id: 5, name: 'Music', iconName: 'headphones', icon: MaterialCommunityIcons },
+    {
+      id: 5,
+      name: 'Music',
+      iconName: 'headphones',
+      icon: MaterialCommunityIcons,
+    },
     { id: 6, name: 'Clothes', iconName: 'tshirt', icon: TshirtIcon },
-    { id: 7, name: 'Others', iconName: 'devices', icon: MaterialCommunityIcons },
+    {
+      id: 7,
+      name: 'Others',
+      iconName: 'devices',
+      icon: MaterialCommunityIcons,
+    },
   ];
 
   return (
     <>
       <View style={styles.card}>
-        <Text style={{ fontSize: 22, fontWeight: 600, marginLeft: 135 }}>
-          Home
-        </Text>
+        <VoltiqueTitle />
+
+        <Text style={{ fontSize: 22, fontWeight: 600 }}>Home</Text>
         <View style={{ flexDirection: 'row' }}>
           <View style={[styles.cartIconContainer, { marginRight: 10 }]}>
             <CartIcon name="cart" size={24} color="#cdcdcdff" />
@@ -35,6 +59,7 @@ export default function Home() {
             <UserIcon name="user" size={20} color="#cdcdcdff" />
           </View>
         </View>
+
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.inputText}
@@ -49,6 +74,7 @@ export default function Home() {
           />
         </View>
       </View>
+
       <View style={styles.list}>
         <FlatList
           data={categories}
@@ -59,28 +85,103 @@ export default function Home() {
             const Icon = item.icon;
             return (
               <Pressable
-                  style={({ pressed }) => [
-                    styles.category,
-                    pressed && styles.categoryHover,
-                  ]}
-                >
-                  {({ pressed }) => (
-                    <>
-                      <Icon
-                        name={item.iconName}
-                        size={20}
-                        color={pressed ? '#ffffff' : '#3b3232ff'} // icon color
-                      />
-                     <Text style={[styles.text, { color: pressed ? '#ffffff' : '#3b3232ff' }]}>
-                        {item.name}
-                      </Text>
-                    </>
-                  )}
+                style={({ pressed }) => [
+                  styles.category,
+                  pressed && styles.categoryHover,
+                ]}
+              >
+                {({ pressed }) => (
+                  <>
+                    <Icon
+                      name={item.iconName}
+                      size={20}
+                      color={pressed ? '#ffffff' : '#3b3232ff'} // icon color
+                    />
+                    <Text
+                      style={[
+                        styles.text,
+                        { color: pressed ? '#ffffff' : '#3b3232ff' },
+                      ]}
+                    >
+                      {item.name}
+                    </Text>
+                  </>
+                )}
               </Pressable>
             );
           }}
         />
       </View>
+      <Pressable>
+        {({ pressed }) => (
+          <Text
+            style={{
+              color: pressed
+                ? 'rgba(134, 134, 230, 1)'
+                : 'rgba(184, 184, 250, 1)',
+              fontWeight: 500,
+              marginLeft: '80%',
+              marginBottom: 15,
+            }}
+          >
+            View All
+          </Text>
+        )}
+      </Pressable>
+
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 120, paddingRight: 23 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flex: 1 }}>
+            <Product
+              name="S24 Ultra Platanium"
+              price="800"
+              bckgColor="#8df1b0ff"
+              containerHeight={250}
+              imgSrc={require('../../../../assets/images/s24.png')}
+              imgWidth={150}
+              imgHeight={150}
+              imgMargin={8}
+            />
+            <Product
+              name="Razer G"
+              price="450"
+              bckgColor="#abd4d8ff"
+              containerHeight={280}
+              imgSrc={require('../../../../assets/images/razerG.png')}
+              imgWidth={130}
+              imgHeight={170}
+              imgMargin={8}
+            />
+          </View>
+
+          <View style={{ flex: 1 }}>
+            <Product
+              name="Xbox Series X"
+              price="450"
+              bckgColor="#c2befdff"
+              containerHeight={300}
+              imgSrc={require('../../../../assets/images/xbox.png')}
+              imgWidth={130}
+              imgHeight={190}
+              imgMargin={8}
+            />
+            <Product
+              name="S24 Ultra Platanium"
+              price="800"
+              bckgColor="#8df1b0ff"
+              containerHeight={230}
+              imgSrc={require('../../../../assets/images/s24.png')}
+              imgWidth={150}
+              imgHeight={150}
+              imgMargin={8}
+            />
+          </View>
+        </View>
+      </ScrollView>
     </>
   );
 }
@@ -132,8 +233,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  categoryHover:{
-    backgroundColor:'#ff8674ff'
+  categoryHover: {
+    backgroundColor: '#ff8674ff',
   },
   text: {
     color: '#827b7bff',

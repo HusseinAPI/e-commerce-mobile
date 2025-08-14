@@ -14,9 +14,9 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { key: 'home', IconComponent: Icon, iconName: 'home', size: 30 },
+  { key: 'devices', IconComponent: Icon, iconName: 'devices', size: 28 },
   { key: 'heart', IconComponent: HeartIcon, iconName: 'heart', size: 23 },
   { key: 'cart', IconComponent: CartIcon, iconName: 'cart', size: 28 },
-  { key: 'devices', IconComponent: Icon, iconName: 'devices', size: 28 },
   { key: 'user', IconComponent: UserIcon, iconName: 'user', size: 23 },
 ];
 
@@ -27,7 +27,7 @@ export default function NavBar() {
     navItems.reduce((acc, item) => {
       acc[item.key] = new Animated.Value(1);
       return acc;
-    }, {} as Record<string, Animated.Value>)
+    }, {} as Record<string, Animated.Value>),
   ).current;
 
   const animateScale = (key: string, toValue: number) => {
@@ -38,7 +38,9 @@ export default function NavBar() {
     <View key={item.key} style={styles.icon}>
       <Pressable
         style={({ pressed }) => [
-          selected === item.key ? styles.iconPressed : pressed && styles.iconPressed,
+          selected === item.key
+            ? styles.iconPressed
+            : pressed && styles.iconPressed,
         ]}
         onPress={() => {
           setSelected(item.key);
