@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Animated, StyleSheet, Easing } from 'react-native';
 import MaskedView from '@react-native-masked-view/masked-view';
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     letterSpacing: 1,
     marginLeft: 5,
-    color: '#ff8674ff',
+    color: '#a6aa53ff',
   },
   maskView: {
     position: 'absolute',

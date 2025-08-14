@@ -4,24 +4,62 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import HeartIcon from 'react-native-vector-icons/FontAwesome';
 import CartIcon from 'react-native-vector-icons/Ionicons';
 import UserIcon from 'react-native-vector-icons/FontAwesome5';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
+
+type NavProps = NativeStackNavigationProp<RootStackParamList>;
 
 type NavItem = {
   key: string;
+  path: keyof RootStackParamList;
   IconComponent: typeof Icon;
   iconName: string;
   size: number;
 };
 
 const navItems: NavItem[] = [
-  { key: 'home', IconComponent: Icon, iconName: 'home', size: 30 },
-  { key: 'devices', IconComponent: Icon, iconName: 'devices', size: 28 },
-  { key: 'heart', IconComponent: HeartIcon, iconName: 'heart', size: 23 },
-  { key: 'cart', IconComponent: CartIcon, iconName: 'cart', size: 28 },
-  { key: 'user', IconComponent: UserIcon, iconName: 'user', size: 23 },
+  {
+    key: 'home',
+    path: 'Home',
+    IconComponent: Icon,
+    iconName: 'home',
+    size: 30,
+  },
+  {
+    key: 'devices',
+    path: 'Products',
+    IconComponent: Icon,
+    iconName: 'devices',
+    size: 28,
+  },
+  {
+    key: 'heart',
+    path: 'Favourite',
+    IconComponent: HeartIcon,
+    iconName: 'heart',
+    size: 23,
+  },
+  {
+    key: 'cart',
+    path: 'Cart',
+    IconComponent: CartIcon,
+    iconName: 'cart',
+    size: 28,
+  },
+  {
+    key: 'user',
+    path: 'Profile',
+    IconComponent: UserIcon,
+    iconName: 'user',
+    size: 23,
+  },
 ];
 
 export default function NavBar() {
   const [selected, setSelected] = useState<string>('home');
+
+  const navigation = useNavigation<NavProps>();
 
   const scales = useRef(
     navItems.reduce((acc, item) => {
@@ -43,6 +81,7 @@ export default function NavBar() {
             : pressed && styles.iconPressed,
         ]}
         onPress={() => {
+          navigation.navigate(item.path);
           setSelected(item.key);
           animateScale(item.key, 1.2);
         }}
@@ -86,7 +125,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   iconPressed: {
-    backgroundColor: '#ff8674ff',
+    backgroundColor: '#a6aa53ff',
     borderRadius: 10,
     padding: 5,
     paddingVertical: 15,

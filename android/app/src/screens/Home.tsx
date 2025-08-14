@@ -8,16 +8,14 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import CartIcon from 'react-native-vector-icons/Ionicons';
-import UserIcon from 'react-native-vector-icons/FontAwesome5';
 import SearchIcon from 'react-native-vector-icons/Feather';
 import ComputerIcon from 'react-native-vector-icons/MaterialIcons';
 import WatchIcon from 'react-native-vector-icons/Feather';
 import TshirtIcon from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MobileIcon from 'react-native-vector-icons/FontAwesome';
-import VoltiqueTitle from '../components/Title';
 import Product from '../components/Product';
+import Header from '../components/Header';
 
 export default function Home() {
   const categories = [
@@ -48,17 +46,7 @@ export default function Home() {
   return (
     <>
       <View style={styles.card}>
-        <VoltiqueTitle />
-
-        <Text style={{ fontSize: 22, fontWeight: 600 }}>Home</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={[styles.cartIconContainer, { marginRight: 10 }]}>
-            <CartIcon name="cart" size={24} color="#cdcdcdff" />
-          </View>
-          <View style={styles.cartIconContainer}>
-            <UserIcon name="user" size={20} color="#cdcdcdff" />
-          </View>
-        </View>
+        <Header title="Home" />
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -196,11 +184,6 @@ const styles = StyleSheet.create({
     height: 100,
     padding: 15,
     marginTop: 15,
-  },
-  cartIconContainer: {
-    padding: 8,
-    backgroundColor: '#ffffff',
-    borderRadius: 20,
   },
   inputContainer: {
     flexDirection: 'row',
