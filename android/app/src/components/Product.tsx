@@ -7,6 +7,9 @@ import {
   ImageSourcePropType,
   Pressable,
 } from 'react-native';
+import NoFavIcon from 'react-native-vector-icons/FontAwesome';
+import IsFavIcon from 'react-native-vector-icons/FontAwesome';
+import AddtCart from 'react-native-vector-icons/Entypo';
 
 type ProductProps = {
   name: string;
@@ -47,10 +50,18 @@ export default function Product({
             style={{ width: imgWidth, height: imgHeight, margin: imgMargin }}
           />
 
-          <View style={{ marginTop: 20, position: 'absolute', bottom: 25 }}>
+          <View
+            style={{
+              marginTop: 20,
+              position: 'absolute',
+              bottom: 25,
+            }}
+          >
             <Text style={styles.name}>{name}</Text>
             <Text style={styles.price}>${price}</Text>
           </View>
+          <NoFavIcon name="heart-o" size={24} style={styles.favIcon} />
+          <AddtCart name="squared-plus" size={24} style={styles.addIcon} />
         </View>
       )}
     </Pressable>
@@ -65,6 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   name: {
+    width: 90,
     fontSize: 18,
     color: '#6e6c6cff',
     fontWeight: 700,
@@ -75,5 +87,14 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 700,
     marginLeft: 15,
+  },
+  favIcon: {
+    marginLeft: 110,
+    color: '#2b2a2aff',
+  },
+  addIcon: {
+    marginLeft: 110,
+    marginTop: 15,
+    color: '#2b2a2aff', // #6d6defff
   },
 });

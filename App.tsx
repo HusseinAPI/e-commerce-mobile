@@ -4,12 +4,14 @@ import Navbar from './android/app/src/components/Navbar';
 import AppNavigation from './android/app/src/navigation/AppNavigator';
 
 export default function App() {
+  const isCart = false;
+
   return (
     <NavigationContainer>
       <View style={styles.container}>
         <AppNavigation />
         <StatusBar />
-        <Navbar />
+        {isCart ? null : <Navbar />}
       </View>
     </NavigationContainer>
   );

@@ -83,7 +83,7 @@ export default function Home() {
                     <Icon
                       name={item.iconName}
                       size={20}
-                      color={pressed ? '#ffffff' : '#3b3232ff'} // icon color
+                      color={pressed ? '#ffffff' : '#3b3232ff'}
                     />
                     <Text
                       style={[
@@ -132,7 +132,7 @@ export default function Home() {
               imgSrc={require('../../../../assets/images/s24.png')}
               imgWidth={150}
               imgHeight={150}
-              imgMargin={8}
+              imgMargin={5}
             />
             <Product
               name="Razer G"
@@ -161,11 +161,11 @@ export default function Home() {
               name="S24 Ultra Platanium"
               price="800"
               bckgColor="#8df1b0ff"
-              containerHeight={230}
+              containerHeight={250}
               imgSrc={require('../../../../assets/images/s24.png')}
               imgWidth={150}
               imgHeight={150}
-              imgMargin={8}
+              imgMargin={5}
             />
           </View>
         </View>

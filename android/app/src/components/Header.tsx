@@ -8,7 +8,7 @@ export default function Header({ title }: { title: string }) {
   return (
     <>
       <VoltiqueTitle />
-      <Text style={{ fontSize: 22, fontWeight: 600 }}>{title}</Text>
+      <Text style={{ fontSize: 27, fontWeight: 600 }}>{title}</Text>
       <View style={{ flexDirection: 'row' }}>
         <View style={[styles.cartIconContainer, { marginRight: 10 }]}>
           <CartIcon name="cart" size={24} color="#cdcdcdff" />

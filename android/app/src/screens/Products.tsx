@@ -12,6 +12,7 @@ import Product from '../components/Product';
 import Header from '../components/Header';
 
 const categories = [
+  'All',
   'Computers',
   'Accessories',
   'Shoes',
