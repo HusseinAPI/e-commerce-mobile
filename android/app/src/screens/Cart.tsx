@@ -133,7 +133,7 @@ export default function Cart() {
 
       <View
         style={{
-          backgroundColor: '#edededff',
+          backgroundColor: '#4ba9f1ff',
           height: 500,
           borderTopRightRadius: 40,
           borderTopLeftRadius: 40,
@@ -163,7 +163,10 @@ export default function Cart() {
 
       <View style={styles.footer}>
         <Text style={styles.total}>${total.toFixed(2)}</Text>
-        <TouchableOpacity style={styles.checkoutBtn}>
+        <TouchableOpacity
+          style={styles.checkoutBtn}
+          onPress={() => navigation.navigate('CheckOut')}
+        >
           <Text style={styles.checkoutText}>Check Out</Text>
         </TouchableOpacity>
       </View>

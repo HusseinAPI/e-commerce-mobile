@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import {
   View,
@@ -5,6 +6,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
@@ -20,13 +22,16 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      {/* Header background */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Lets Start!</Text>
-        <View style={styles.arrowContainer}>
-          <Icon name="arrow-forward" size={24} color="#fff" />
+      <ImageBackground
+        source={require('../../../../assets/images/blue.jpg')}
+        imageStyle={{ borderRadius: 12 }}
+      >
+        <View style={styles.header}>
+          <View style={styles.arrowContainer}>
+            <Icon name="arrow-forward" size={24} color="#fff" />
+          </View>
         </View>
-      </View>
+      </ImageBackground>
 
       {/* Form */}
       <View style={styles.form}>
@@ -82,7 +87,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#a6aa53ff',
+    backgroundColor: '#ad9f7bff',
   },
   header: {
     height: 220,
@@ -109,7 +114,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   form: {
-    height: 500,
+    height: 580,
     backgroundColor: '#ffffff',
     borderTopRightRadius: 50,
     borderTopLeftRadius: 50,

@@ -7,6 +7,8 @@ import Profile from '../screens/Profile';
 import EditProfile from '../screens/EditProfile';
 import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
+import Orders from '../screens/Orders';
+import CheckOut from '../screens/CheckOut';
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigation() {
@@ -20,6 +22,8 @@ export default function AppNavigation() {
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
+      <Stack.Screen name="Orders" component={Orders} />
+      <Stack.Screen name="CheckOut" component={CheckOut} />
     </Stack.Navigator>
   );
 }

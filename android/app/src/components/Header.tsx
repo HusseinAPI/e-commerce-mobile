@@ -18,7 +18,12 @@ export default function Header({ title }: { title: string }) {
       <Text style={{ fontSize: 27, fontWeight: 600 }}>{title}</Text>
       <View style={{ flexDirection: 'row' }}>
         <View style={[styles.cartIconContainer, { marginRight: 10 }]}>
-          <CartIcon name="cart" size={24} color="#cdcdcdff" />
+          <CartIcon
+            name="cart"
+            size={24}
+            color="#cdcdcdff"
+            onPress={() => navigation.navigate('Cart')}
+          />
         </View>
         <View style={styles.cartIconContainer}>
           <UserIcon
