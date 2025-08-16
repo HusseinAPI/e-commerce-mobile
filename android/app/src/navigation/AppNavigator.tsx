@@ -3,7 +3,8 @@ import Home from '../screens/Home';
 import Products from '../screens/Products';
 import Favourite from '../screens/Favourite';
 import Cart from '../screens/Cart';
-
+import Profile from '../screens/Profile';
+import EditProfile from '../screens/EditProfile';
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigation() {
@@ -13,6 +14,8 @@ export default function AppNavigation() {
       <Stack.Screen name="Products" component={Products} />
       <Stack.Screen name="Favourite" component={Favourite} />
       <Stack.Screen name="Cart" component={Cart} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );
 }
