@@ -12,6 +12,9 @@ import BackIcon from 'react-native-vector-icons/Feather';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
 import IsFavIcon from 'react-native-vector-icons/FontAwesome';
 import AddtCart from 'react-native-vector-icons/Entypo';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
 
 export default function Favourite() {
   const [cartItems, setCartItems] = useState([
@@ -73,6 +76,10 @@ export default function Favourite() {
     },
   ]);
 
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+  const navigation = useNavigation<NavigationProp>();
+
   type CartItem = {
     id: string;
     name: string;
@@ -98,7 +105,11 @@ export default function Favourite() {
             size={24}
             style={{ color: 'red', marginBottom: 10 }}
           />
-          <AddtCart name="squared-plus" size={27} />
+          <AddtCart
+            name="squared-plus"
+            size={27}
+            // style={{ color: '#a6aa53ff' }}
+          />
         </View>
       </View>
     </View>
@@ -107,7 +118,12 @@ export default function Favourite() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <BackIcon name="arrow-left" size={28} style={styles.backIcon} />
+        <BackIcon
+          name="arrow-left"
+          size={28}
+          style={styles.backIcon}
+          onPress={() => navigation.navigate('Home')}
+        />
         <Text style={styles.title}>Watchlist</Text>
         <TrashIcon name="trash" size={20} style={styles.trashIcon} />
       </View>
@@ -160,5 +176,5 @@ const styles = StyleSheet.create({
   image: { width: 110, height: 110, resizeMode: 'contain' },
   details: { flex: 1, flexDirection: 'row', justifyContent: 'space-between' },
   name: { fontSize: 15, fontWeight: '500', color: '#333' },
-  price: { fontSize: 15, fontWeight: 'bold', color: '#2c2cff', marginTop: 5 },
+  price: { fontSize: 15, fontWeight: 'bold', color: '#a6aa53ff', marginTop: 5 },
 });

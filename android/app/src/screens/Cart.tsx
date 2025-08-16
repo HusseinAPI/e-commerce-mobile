@@ -11,6 +11,9 @@ import {
 } from 'react-native';
 import BackIcon from 'react-native-vector-icons/Feather';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([
@@ -55,6 +58,10 @@ export default function Cart() {
       bg: '#ffe6f0',
     },
   ]);
+
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+  const navigation = useNavigation<NavigationProp>();
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.qty,
@@ -114,7 +121,12 @@ export default function Cart() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <BackIcon name="arrow-left" size={28} style={styles.backIcon} />
+        <BackIcon
+          name="arrow-left"
+          size={28}
+          style={styles.backIcon}
+          onPress={() => navigation.navigate('Home')}
+        />
         <Text style={styles.title}>My Cart</Text>
         <TrashIcon name="trash" size={20} style={styles.trashIcon} />
       </View>
@@ -193,7 +205,7 @@ const styles = StyleSheet.create({
   image: { width: 110, height: 110, resizeMode: 'contain' },
   details: { flex: 1, flexDirection: 'row', justifyContent: 'space-between' },
   name: { fontSize: 15, fontWeight: '500', color: '#333' },
-  price: { fontSize: 15, fontWeight: 'bold', color: '#6d6defff', marginTop: 5 },
+  price: { fontSize: 15, fontWeight: 'bold', color: '#a6aa53ff', marginTop: 5 },
   qtyContainer: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -227,7 +239,7 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontSize: 16,
     fontWeight: 600,
-    color: '#6d6defff',
+    color: '#a6aa53ff',
     marginLeft: 5,
   },
   footer: {
@@ -243,7 +255,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   checkoutBtn: {
-    backgroundColor: '#6d6defff',
+    backgroundColor: '#a6aa53ff',
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 20,
