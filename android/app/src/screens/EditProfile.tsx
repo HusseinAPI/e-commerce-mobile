@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function ProfileScreen() {
@@ -7,6 +7,9 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       {/* Header*/}
       <View style={styles.header}>
+        <View style={styles.arrowContainer}>
+          <Icon name="arrow-back" size={24} color="#a6aa53ff" />
+        </View>
         <Text style={styles.profileText}>Profile</Text>
         <Icon name="edit" size={25} color="#000" style={styles.editIcon} />
       </View>
@@ -75,10 +78,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
   },
+  arrowContainer: {
+    backgroundColor: '#ffffffff',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    left: 20,
+    top: 50,
+    zIndex: 10,
+  },
   profileText: {
     fontSize: 27,
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#fff',
+    fontStyle: 'italic',
   },
   editIcon: {
     position: 'absolute',

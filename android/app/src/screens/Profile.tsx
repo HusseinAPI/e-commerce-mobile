@@ -14,7 +14,7 @@ const ProfileScreen = () => {
   const menuItems = [
     { id: 1, label: 'Edit Profile', icon: 'user', path: 'EditProfile' },
     { id: 3, label: 'Wishlist', icon: 'heart', path: 'Favourite' },
-    { id: 4, label: 'Order History', icon: 'clipboard', path: '' },
+    { id: 4, label: 'Order History', icon: 'clipboard', path: 'Orders' },
     { id: 5, label: 'Notification', icon: 'bell', path: '' },
     { id: 2, label: 'Logout', icon: 'log-out', path: '' },
   ];
@@ -32,7 +32,7 @@ const ProfileScreen = () => {
       {/* Profile Header */}
       <View style={styles.header}>
         <Image
-          source={require('../../../../assets/images/user1.jpg')} // replace with actual image
+          source={require('../../../../assets/images/user1.jpg')}
           style={styles.avatar}
         />
         <Text style={styles.name}>Jack Robertson</Text>
