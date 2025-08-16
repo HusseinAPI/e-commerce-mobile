@@ -193,6 +193,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 8,
     elevation: 4,
+    borderWidth: 1,
+    borderColor: '#a6aa53ff',
   },
   imageWrapper: {
     width: 80,

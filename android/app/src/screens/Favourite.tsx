@@ -128,7 +128,12 @@ export default function Favourite() {
         <TrashIcon name="trash" size={20} style={styles.trashIcon} />
       </View>
 
-      <View style={{ backgroundColor: '#edededff', borderRadius: 40 }}>
+      <View
+        style={{
+          backgroundColor: '#edededff',
+          borderRadius: 40,
+        }}
+      >
         <View style={{ marginTop: 30 }}>
           <FlatList
             data={cartItems}
@@ -164,6 +169,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 15,
     elevation: 4,
+    borderWidth: 1,
+    borderColor: '#a6aa53ff',
   },
   imageWrapper: {
     width: 80,

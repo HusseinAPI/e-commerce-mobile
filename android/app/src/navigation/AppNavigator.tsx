@@ -5,6 +5,8 @@ import Favourite from '../screens/Favourite';
 import Cart from '../screens/Cart';
 import Profile from '../screens/Profile';
 import EditProfile from '../screens/EditProfile';
+import SignIn from '../screens/SignIn';
+import SignUp from '../screens/SignUp';
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigation() {
@@ -16,6 +18,8 @@ export default function AppNavigation() {
       <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="SignIn" component={SignIn} />
+      <Stack.Screen name="SignUp" component={SignUp} />
     </Stack.Navigator>
   );
 }
