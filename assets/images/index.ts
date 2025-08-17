@@ -1,0 +1,16 @@
+export const images: { [key: string]: any } = {
+  'adidas.png': require('./adidas.png'),
+  'adidasW.png': require('./adidasW.png'),
+  'dell.png': require('./dell.png'),
+  'iphone15.png': require('./iphone15.png'),
+  'logitech.png': require('./logitech.png'),
+  'macbookpro.png': require('./macbookpro.png'),
+  'ps5.png': require('./ps5.png'),
+  'razer.png': require('./razer.png'),
+  'reebok.png': require('./reebok.png'),
+  's24.png': require('./s24.png'),
+  'tablet.jpg': require('./tablet.jpg'),
+  'tShirt.png': require('./tShirt.png'),
+  'watch.png': require('./watch.png'),
+  'xbox.png': require('./xbox.png'),
+};
