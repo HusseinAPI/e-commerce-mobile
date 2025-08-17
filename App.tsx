@@ -4,7 +4,7 @@ import Navbar from './android/app/src/components/Navbar';
 import AppNavigation from './android/app/src/navigation/AppNavigator';
 
 export default function App() {
-  const isCart = false;
+  const isCart = true;
 
   return (
     <NavigationContainer>

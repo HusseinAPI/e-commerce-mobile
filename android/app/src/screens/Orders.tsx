@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: '#4ba9f1ff',
+    backgroundColor: '#a5affbff',
   },
   arrowContainer: {
     backgroundColor: '#ffffffff',

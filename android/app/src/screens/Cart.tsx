@@ -133,7 +133,7 @@ export default function Cart() {
 
       <View
         style={{
-          backgroundColor: '#4ba9f1ff',
+          backgroundColor: '#a5affbff',
           height: 500,
           borderTopRightRadius: 40,
           borderTopLeftRadius: 40,

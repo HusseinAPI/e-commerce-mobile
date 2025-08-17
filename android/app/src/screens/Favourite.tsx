@@ -131,7 +131,7 @@ export default function Favourite() {
       <View
         style={{
           height: 600,
-          backgroundColor: '#4ba9f1ff',
+          backgroundColor: '#a5affbff',
           borderRadius: 40,
         }}
       >

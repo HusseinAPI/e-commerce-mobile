@@ -10,6 +10,9 @@ import {
 import NoFavIcon from 'react-native-vector-icons/FontAwesome';
 import IsFavIcon from 'react-native-vector-icons/FontAwesome';
 import AddtCart from 'react-native-vector-icons/Entypo';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/types';
 
 type ProductProps = {
   name: string;
@@ -32,8 +35,12 @@ export default function Product({
   imgHeight,
   imgMargin,
 }: ProductProps) {
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+  const navigation = useNavigation<NavigationProp>();
+
   return (
-    <Pressable>
+    <Pressable onPress={() => navigation.navigate('ProductScreen')}>
       {({ pressed }) => (
         <View
           style={[
