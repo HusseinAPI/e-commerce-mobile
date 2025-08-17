@@ -9,6 +9,7 @@ import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
 import Orders from '../screens/Orders';
 import CheckOut from '../screens/CheckOut';
+import ProductScreen from '../screens/ProductScreen';
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigation() {
@@ -16,6 +17,7 @@ export default function AppNavigation() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Products" component={Products} />
+      <Stack.Screen name="ProductScreen" component={ProductScreen} />
       <Stack.Screen name="Favourite" component={Favourite} />
       <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="Profile" component={Profile} />
