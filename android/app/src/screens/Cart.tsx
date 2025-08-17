@@ -30,7 +30,7 @@ export default function Cart() {
       name: 'Excee Sneakers',
       price: 260,
       qty: 1,
-      image: require('../../../../assets/images/razerG.png'),
+      image: require('../../../../assets/images/razer.png'),
       bg: '#e6f0ff',
     },
     {

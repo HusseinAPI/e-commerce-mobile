@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import { useEffect } from 'react';
 import {
   View,
   Text,
@@ -16,8 +17,19 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MobileIcon from 'react-native-vector-icons/FontAwesome';
 import Product from '../components/Product';
 import Header from '../components/Header';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProducts } from '../store/productSlice';
+import { images } from '../../../../assets/images';
 
 export default function Home() {
+  const products = useSelector(state => state.productSlice.products);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProducts());
+    console.log(products);
+  }, []);
+
   const categories = [
     { id: 1, name: 'Computer', iconName: 'computer', icon: ComputerIcon },
     { id: 2, name: 'Accesories', iconName: 'watch', icon: WatchIcon },
@@ -124,49 +136,43 @@ export default function Home() {
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flex: 1 }}>
-            <Product
-              name="S24 Ultra Platanium"
-              price="800"
-              bckgColor="#8df1b0ff"
-              containerHeight={250}
-              imgSrc={require('../../../../assets/images/s24.png')}
-              imgWidth={150}
-              imgHeight={150}
-              imgMargin={5}
-            />
-            <Product
-              name="Razer G"
-              price="450"
-              bckgColor="#abd4d8ff"
-              containerHeight={280}
-              imgSrc={require('../../../../assets/images/razerG.png')}
-              imgWidth={130}
-              imgHeight={170}
-              imgMargin={8}
-            />
+            {products.length
+              ? products.map((elem, index) => {
+                  if (index < 4)
+                    return (
+                      <Product
+                        name={elem.name.substr(0, 15)}
+                        price={elem.price}
+                        bckgColor="#8df1b0ff"
+                        containerHeight={250}
+                        imgSrc={images[elem.img]}
+                        imgWidth={elem.width}
+                        imgHeight={elem.height}
+                        imgMargin={5}
+                      />
+                    );
+                })
+              : null}
           </View>
 
           <View style={{ flex: 1 }}>
-            <Product
-              name="Xbox Series X"
-              price="450"
-              bckgColor="#c2befdff"
-              containerHeight={300}
-              imgSrc={require('../../../../assets/images/xbox.png')}
-              imgWidth={130}
-              imgHeight={190}
-              imgMargin={8}
-            />
-            <Product
-              name="S24 Ultra Platanium"
-              price="800"
-              bckgColor="#8df1b0ff"
-              containerHeight={250}
-              imgSrc={require('../../../../assets/images/s24.png')}
-              imgWidth={150}
-              imgHeight={150}
-              imgMargin={5}
-            />
+            {products.length
+              ? products.map((elem, index) => {
+                  if (index > 4 && index < 9)
+                    return (
+                      <Product
+                        name={elem.name.substr(0, 15)}
+                        price={elem.price}
+                        bckgColor="#8df1b0ff"
+                        containerHeight={250}
+                        imgSrc={images[elem.img]}
+                        imgWidth={150}
+                        imgHeight={150}
+                        imgMargin={5}
+                      />
+                    );
+                })
+              : null}
           </View>
         </View>
       </ScrollView>

@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     color: '#444',
     width: 280,
     marginLeft: 20,
+    fontFamily: 'sans-serif-light',
   },
   ratingRow: {
     flexDirection: 'row',
@@ -133,7 +134,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffffff',
   },
   price: {
-    fontFamily: 'Inter Display Light',
     fontSize: 36,
     color: '#000',
   },

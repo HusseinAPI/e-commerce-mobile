@@ -2,18 +2,22 @@ import { StatusBar, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Navbar from './android/app/src/components/Navbar';
 import AppNavigation from './android/app/src/navigation/AppNavigator';
+import { Provider } from 'react-redux';
+import store from './android/app/src/store';
 
 export default function App() {
-  const isCart = true;
+  const isCart = false;
 
   return (
-    <NavigationContainer>
-      <View style={styles.container}>
-        <AppNavigation />
-        <StatusBar />
-        {isCart ? null : <Navbar />}
-      </View>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <View style={styles.container}>
+          <AppNavigation />
+          <StatusBar />
+          {isCart ? null : <Navbar />}
+        </View>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
