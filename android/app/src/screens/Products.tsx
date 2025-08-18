@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,21 +10,45 @@ import {
 } from 'react-native';
 import Product from '../components/Product';
 import Header from '../components/Header';
-
-const categories = [
-  'All',
-  'Computers',
-  'Accessories',
-  'Shoes',
-  'Mobiles',
-  'Music',
-  'Clothes',
-  'Others',
-];
+import { getProducts } from '../store/productSlice';
+import { images } from '../../../../assets/images';
+import { RootState } from '../store';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 
 export default function Products() {
-  const [selected, setSelected] = useState('All');
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const products = useAppSelector(
+    (state: RootState) => state.productSlice.products,
+  );
+
+  const dispatch = useAppDispatch();
+
+  const categories = [
+    'All',
+    ...new Set(
+      products.map(p => p.category?.trim().toLowerCase()).filter(Boolean),
+    ),
+  ];
+
+  // fetch Products Data
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+
+  // Filter by Category
+  const categSelected = useAppSelector(
+    state => state.productSlice.categSelected,
+  );
+  const [selected, setSelected] = useState(categSelected || 'All');
+
+  const filterdedProducts =
+    selected === 'All'
+      ? products
+      : products.filter(
+          product =>
+            product.category.trim().toLowerCase() ===
+            selected.trim().toLowerCase(),
+        );
 
   return (
     <>
@@ -56,46 +80,21 @@ export default function Products() {
       )}
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          <Product
-            name="S24 Ultra Platanium"
-            price="800"
-            bckgColor="#ffffffff"
-            containerHeight={250}
-            imgSrc={require('../../../../assets/images/s24.png')}
-            imgWidth={150}
-            imgHeight={150}
-            imgMargin={8}
-          />
-          <Product
-            name="S24 Ultra Platanium"
-            price="800"
-            bckgColor="#ffffffff"
-            containerHeight={250}
-            imgSrc={require('../../../../assets/images/s24.png')}
-            imgWidth={150}
-            imgHeight={150}
-            imgMargin={8}
-          />
-          <Product
-            name="S24 Ultra Platanium"
-            price="800"
-            bckgColor="#ffffffff"
-            containerHeight={250}
-            imgSrc={require('../../../../assets/images/s24.png')}
-            imgWidth={150}
-            imgHeight={150}
-            imgMargin={8}
-          />
-          <Product
-            name="S24 Ultra Platanium"
-            price="800"
-            bckgColor="#ffffffff"
-            containerHeight={250}
-            imgSrc={require('../../../../assets/images/s24.png')}
-            imgWidth={150}
-            imgHeight={150}
-            imgMargin={8}
-          />
+          {filterdedProducts.length
+            ? filterdedProducts.map((elem, index) => (
+                <Product
+                  key={index}
+                  name={elem.name.substr(0, 15)}
+                  price={elem.price}
+                  bckgColor="#ffffffff"
+                  containerHeight={250}
+                  imgSrc={images[elem.img]}
+                  imgWidth={Number(elem.width)}
+                  imgHeight={Number(elem.height)}
+                  imgMargin={5}
+                />
+              ))
+            : null}
         </View>
       </ScrollView>
     </>

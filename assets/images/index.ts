@@ -1,6 +1,7 @@
 export const images: { [key: string]: any } = {
   'adidas.png': require('./adidas.png'),
   'adidasW.png': require('./adidasW.png'),
+  'benyar.png': require('./benyar.png'),
   'dell.png': require('./dell.png'),
   'iphone15.png': require('./iphone15.png'),
   'logitech.png': require('./logitech.png'),
