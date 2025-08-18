@@ -10,51 +10,50 @@ import {
   ScrollView,
 } from 'react-native';
 import SearchIcon from 'react-native-vector-icons/Feather';
-import ComputerIcon from 'react-native-vector-icons/MaterialIcons';
-import WatchIcon from 'react-native-vector-icons/Feather';
-import TshirtIcon from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MobileIcon from 'react-native-vector-icons/FontAwesome';
 import Product from '../components/Product';
 import Header from '../components/Header';
-import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../store/productSlice';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
+import { getProducts, selectCategory } from '../store/productSlice';
 import { images } from '../../../../assets/images';
+import { categoryIcons } from '../../../../assets/icons';
+import { RootState } from '../store';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 
 export default function Home() {
-  const products = useSelector(state => state.productSlice.products);
-  const dispatch = useDispatch();
+  const products = useAppSelector(
+    (state: RootState) => state.productSlice.products,
+  );
+  const dispatch = useAppDispatch();
+
+  const categories = [
+    ...new Set(
+      products.map(p => p.category?.trim().toLowerCase()).filter(Boolean),
+    ),
+  ].map(cat => ({
+    name: cat,
+    iconData: categoryIcons[cat],
+  }));
+
+  // buuton Rounting
+
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+  const navigation = useNavigation<NavigationProp>();
+
+  // fetch Products data
 
   useEffect(() => {
     dispatch(getProducts());
-    console.log(products);
-  }, []);
+  }, [dispatch]);
 
-  const categories = [
-    { id: 1, name: 'Computer', iconName: 'computer', icon: ComputerIcon },
-    { id: 2, name: 'Accesories', iconName: 'watch', icon: WatchIcon },
-    {
-      id: 3,
-      name: 'Shoes',
-      iconName: 'shoe-sneaker',
-      icon: MaterialCommunityIcons,
-    },
-    { id: 4, name: 'Mobile', iconName: 'mobile', icon: MobileIcon },
-    {
-      id: 5,
-      name: 'Music',
-      iconName: 'headphones',
-      icon: MaterialCommunityIcons,
-    },
-    { id: 6, name: 'Clothes', iconName: 'tshirt', icon: TshirtIcon },
-    {
-      id: 7,
-      name: 'Others',
-      iconName: 'devices',
-      icon: MaterialCommunityIcons,
-    },
-  ];
+  // Select Category to filter by them in Products
 
+  const handleSelectCategory = (category: String) => {
+    dispatch(selectCategory(category));
+    navigation.navigate('Products');
+  };
   return (
     <>
       <View style={styles.card}>
@@ -80,11 +79,14 @@ export default function Home() {
           data={categories}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item.name}
           renderItem={({ item }) => {
-            const Icon = item.icon;
+            const Icon = item.iconData.icon;
+            const iconName = item.iconData.iconName;
+
             return (
               <Pressable
+                onPress={() => handleSelectCategory(item.name)}
                 style={({ pressed }) => [
                   styles.category,
                   pressed && styles.categoryHover,
@@ -93,7 +95,7 @@ export default function Home() {
                 {({ pressed }) => (
                   <>
                     <Icon
-                      name={item.iconName}
+                      name={iconName}
                       size={20}
                       color={pressed ? '#ffffff' : '#3b3232ff'}
                     />
@@ -112,7 +114,7 @@ export default function Home() {
           }}
         />
       </View>
-      <Pressable>
+      <Pressable onPress={() => navigation.navigate('Products')}>
         {({ pressed }) => (
           <Text
             style={{
@@ -141,13 +143,14 @@ export default function Home() {
                   if (index < 4)
                     return (
                       <Product
+                        key={index}
                         name={elem.name.substr(0, 15)}
                         price={elem.price}
                         bckgColor="#8df1b0ff"
                         containerHeight={250}
                         imgSrc={images[elem.img]}
-                        imgWidth={elem.width}
-                        imgHeight={elem.height}
+                        imgWidth={Number(elem.width)}
+                        imgHeight={Number(elem.height)}
                         imgMargin={5}
                       />
                     );
@@ -161,13 +164,14 @@ export default function Home() {
                   if (index > 4 && index < 9)
                     return (
                       <Product
+                        key={index}
                         name={elem.name.substr(0, 15)}
                         price={elem.price}
                         bckgColor="#8df1b0ff"
                         containerHeight={250}
                         imgSrc={images[elem.img]}
-                        imgWidth={150}
-                        imgHeight={150}
+                        imgWidth={Number(elem.width)}
+                        imgHeight={Number(elem.height)}
                         imgMargin={5}
                       />
                     );

@@ -19,7 +19,7 @@ export default function ProductScreen() {
           name="arrow-left"
           size={28}
           style={styles.backIcon}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.goBack()}
         />
         <Text style={styles.title}>Watchlist</Text>
         <TrashIcon name="trash" size={20} style={styles.trashIcon} />

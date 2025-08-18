@@ -39,6 +39,8 @@ export default function Product({
 
   const navigation = useNavigation<NavigationProp>();
 
+  const marginTop = Number(imgHeight) < 130 ? 30 : 0;
+
   return (
     <Pressable onPress={() => navigation.navigate('ProductScreen')}>
       {({ pressed }) => (
@@ -54,21 +56,34 @@ export default function Product({
         >
           <Image
             source={imgSrc}
-            style={{ width: imgWidth, height: imgHeight, margin: imgMargin }}
+            style={{
+              width: imgWidth,
+              height: imgHeight,
+              margin: imgMargin,
+              marginTop: marginTop,
+            }}
           />
 
           <View
             style={{
               marginTop: 20,
               position: 'absolute',
-              bottom: 25,
+              bottom: 5,
             }}
           >
             <Text style={styles.name}>{name}</Text>
             <Text style={styles.price}>${price}</Text>
           </View>
-          <NoFavIcon name="heart-o" size={24} style={styles.favIcon} />
-          <AddtCart name="squared-plus" size={24} style={styles.addIcon} />
+          <View
+            style={{
+              marginTop: 20,
+              position: 'absolute',
+              bottom: 5,
+            }}
+          >
+            <NoFavIcon name="heart-o" size={24} style={styles.favIcon} />
+            <AddtCart name="squared-plus" size={24} style={styles.addIcon} />
+          </View>
         </View>
       )}
     </Pressable>

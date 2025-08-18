@@ -125,7 +125,7 @@ export default function Cart() {
           name="arrow-left"
           size={28}
           style={styles.backIcon}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.goBack()}
         />
         <Text style={styles.title}>My Cart</Text>
         <TrashIcon name="trash" size={20} style={styles.trashIcon} />
