@@ -4,6 +4,8 @@ import { Product } from '../types/productType';
 interface ProductState {
   products: Product[];
   categSelected: string;
+  pageSelected: string;
+  visibilityOfNav: boolean;
 }
 
 export const getProducts = createAsyncThunk(
@@ -29,15 +31,27 @@ export const getProducts = createAsyncThunk(
 const initialState: ProductState = {
   products: [],
   categSelected: 'All',
+  pageSelected: 'home',
+  visibilityOfNav: true,
 };
 
 const productSlice = createSlice({
-  name: 'shop',
+  name: 'product',
   initialState,
   reducers: {
     // Send Category from Home to Products
     selectCategory: (state, action) => {
       state.categSelected = action.payload.trim().toLowerCase();
+    },
+
+    // Select Page to change Navbar
+    selectPage: (state, action) => {
+      state.pageSelected = action.payload;
+    },
+
+    // Hidden Navbar in some pages
+    visibleNavbar: (state, action) => {
+      state.visibilityOfNav = action.payload;
     },
   },
   extraReducers: builder => {
@@ -47,5 +61,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { selectCategory } = productSlice.actions;
+export const { selectCategory, selectPage, visibleNavbar } =
+  productSlice.actions;
 export default productSlice.reducer;

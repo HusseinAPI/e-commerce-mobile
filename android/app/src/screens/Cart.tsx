@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import BackIcon from 'react-native-vector-icons/Feather';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
+import { selectPage, visibleNavbar } from '../store/productSlice';
+import { useAppDispatch } from '../store/hooks';
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([
@@ -62,6 +64,7 @@ export default function Cart() {
   type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
   const navigation = useNavigation<NavigationProp>();
+  const dispatch = useAppDispatch();
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.qty,
@@ -116,6 +119,15 @@ export default function Cart() {
         </TouchableOpacity>
       </View>
     </View>
+  );
+
+  // Select Cart Icon in NavBar when open the page
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(selectPage('cart'));
+      dispatch(visibleNavbar(false));
+    }, [dispatch]),
   );
 
   return (

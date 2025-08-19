@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,13 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectPage, visibleNavbar } from '../store/productSlice';
+import { logout } from '../store/authSlice';
+import { RootState } from '../store';
 
 const ProfileScreen = () => {
   const menuItems = [
@@ -16,16 +22,35 @@ const ProfileScreen = () => {
     { id: 3, label: 'Wishlist', icon: 'heart', path: 'Favourite' },
     { id: 4, label: 'Order History', icon: 'clipboard', path: 'Orders' },
     { id: 5, label: 'Notification', icon: 'bell', path: '' },
-    { id: 2, label: 'Logout', icon: 'log-out', path: '' },
+    { id: 2, label: 'Logout', icon: 'log-out', path: 'logout' },
   ];
 
-  const navigation = useNavigation();
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+  const navigation = useNavigation<NavigationProp>();
+  const dispatch = useAppDispatch();
 
   // routing of Profile pages
 
   const navigateTo = (page: string) => {
     navigation.navigate(page);
   };
+
+  // Select Profile Icon in NavBar when open the page
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(selectPage('user'));
+      dispatch(visibleNavbar(true));
+    }, [dispatch]),
+  );
+
+  // LogOut settings
+  const user = useAppSelector((state: RootState) => state.authSlice.user);
+
+  useEffect(() => {
+    if (!user) navigation.navigate('SignIn');
+    console.log(user);
+  }, [user, navigation]);
 
   return (
     <ScrollView style={styles.container}>
@@ -44,7 +69,11 @@ const ProfileScreen = () => {
           <TouchableOpacity
             key={item.id}
             style={styles.menuItem}
-            onPress={() => navigateTo(item.path)}
+            onPress={() => {
+              item.path === 'logout'
+                ? dispatch(logout())
+                : navigateTo(item.path);
+            }}
           >
             <View style={styles.menuLeft}>
               <Icon name={item.icon} size={20} color="#a6aa53ff" />

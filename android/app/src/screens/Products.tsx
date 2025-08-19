@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,11 @@ import {
 } from 'react-native';
 import Product from '../components/Product';
 import Header from '../components/Header';
-import { getProducts } from '../store/productSlice';
+import { getProducts, selectPage, visibleNavbar } from '../store/productSlice';
 import { images } from '../../../../assets/images';
 import { RootState } from '../store';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Products() {
   const [open, setOpen] = useState<boolean>(false);
@@ -49,6 +50,15 @@ export default function Products() {
             product.category.trim().toLowerCase() ===
             selected.trim().toLowerCase(),
         );
+
+  // Select Products Icon in NavBar when open the page
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(selectPage('devices'));
+      dispatch(visibleNavbar(true));
+    }, [dispatch]),
+  );
 
   return (
     <>

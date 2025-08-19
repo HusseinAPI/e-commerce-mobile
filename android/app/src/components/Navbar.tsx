@@ -7,6 +7,9 @@ import UserIcon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { RootState } from '../store';
+import { selectPage } from '../store/productSlice';
 
 type NavProps = NativeStackNavigationProp<RootStackParamList>;
 
@@ -57,9 +60,22 @@ const navItems: NavItem[] = [
 ];
 
 export default function NavBar() {
-  const [selected, setSelected] = useState<string>('home');
+  const pageSelected = useAppSelector(
+    (state: RootState) => state.productSlice.pageSelected,
+  );
+
+  const visibilityOfNav = useAppSelector(
+    (state: RootState) => state.productSlice.visibilityOfNav,
+  );
 
   const navigation = useNavigation<NavProps>();
+  const dispatch = useAppDispatch();
+
+  const handleClickPage = (item: NavItem) => {
+    navigation.navigate(item.path);
+    dispatch(selectPage(item.key));
+    animateScale(item.key, 1.2);
+  };
 
   const scales = useRef(
     navItems.reduce((acc, item) => {
@@ -76,14 +92,12 @@ export default function NavBar() {
     <View key={item.key} style={styles.icon}>
       <Pressable
         style={({ pressed }) => [
-          selected === item.key
+          pageSelected === item.key
             ? styles.iconPressed
             : pressed && styles.iconPressed,
         ]}
         onPress={() => {
-          navigation.navigate(item.path);
-          setSelected(item.key);
-          animateScale(item.key, 1.2);
+          handleClickPage(item);
         }}
         onPressOut={() => animateScale(item.key, 1)}
       >
@@ -93,7 +107,7 @@ export default function NavBar() {
               name={item.iconName}
               size={item.size}
               color={
-                selected === item.key || pressed ? '#ffffffff' : '#cdcdcdff'
+                pageSelected === item.key || pressed ? '#ffffffff' : '#cdcdcdff'
               }
             />
           </Animated.View>
@@ -102,7 +116,11 @@ export default function NavBar() {
     </View>
   );
 
-  return <View style={styles.card}>{navItems.map(renderItem)}</View>;
+  return (
+    visibilityOfNav && (
+      <View style={styles.card}>{navItems.map(renderItem)}</View>
+    )
+  );
 }
 
 const styles = StyleSheet.create({
