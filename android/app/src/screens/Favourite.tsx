@@ -12,9 +12,11 @@ import BackIcon from 'react-native-vector-icons/Feather';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
 import IsFavIcon from 'react-native-vector-icons/FontAwesome';
 import AddtCart from 'react-native-vector-icons/Entypo';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
+import { selectPage, visibleNavbar } from '../store/productSlice';
+import { useAppDispatch } from '../store/hooks';
 
 export default function Favourite() {
   const [cartItems, setCartItems] = useState([
@@ -79,6 +81,7 @@ export default function Favourite() {
   type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
   const navigation = useNavigation<NavigationProp>();
+  const dispatch = useAppDispatch();
 
   type CartItem = {
     id: string;
@@ -113,6 +116,15 @@ export default function Favourite() {
         </View>
       </View>
     </View>
+  );
+
+  // Select Favourite Icon in NavBar when open the page
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(selectPage('heart'));
+      dispatch(visibleNavbar(true));
+    }, [dispatch]),
   );
 
   return (

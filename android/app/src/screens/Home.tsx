@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,10 +12,15 @@ import {
 import SearchIcon from 'react-native-vector-icons/Feather';
 import Product from '../components/Product';
 import Header from '../components/Header';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
-import { getProducts, selectCategory } from '../store/productSlice';
+import {
+  getProducts,
+  selectCategory,
+  selectPage,
+  visibleNavbar,
+} from '../store/productSlice';
 import { images } from '../../../../assets/images';
 import { categoryIcons } from '../../../../assets/icons';
 import { RootState } from '../store';
@@ -54,6 +59,16 @@ export default function Home() {
     dispatch(selectCategory(category));
     navigation.navigate('Products');
   };
+
+  // Select Home Icon in NavBar when open the page
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(selectPage('home'));
+      dispatch(visibleNavbar(true));
+    }, [dispatch]),
+  );
+
   return (
     <>
       <View style={styles.card}>

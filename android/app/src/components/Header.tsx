@@ -12,6 +12,10 @@ export default function Header({ title }: { title: string }) {
 
   const navigation = useNavigation<NavigationProp>();
 
+  const handleClickCartIcon = () => {
+    navigation.navigate('Cart');
+  };
+
   return (
     <>
       <VoltiqueTitle />
@@ -22,7 +26,7 @@ export default function Header({ title }: { title: string }) {
             name="cart"
             size={24}
             color="#cdcdcdff"
-            onPress={() => navigation.navigate('Cart')}
+            onPress={() => handleClickCartIcon()}
           />
         </View>
         <View style={styles.cartIconContainer}>
