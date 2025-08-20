@@ -2,15 +2,32 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BackIcon from 'react-native-vector-icons/Feather';
-import TrashIcon from 'react-native-vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+import FavIcon from 'react-native-vector-icons/FontAwesome';
+import AddtCart from 'react-native-vector-icons/Entypo';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { RootState } from '../store';
+import { visibleNavbar } from '../store/productSlice';
+import { images } from '../../../../assets/images';
 
 export default function ProductScreen() {
-  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+  const productSelected = useAppSelector(
+    (state: RootState) => state.productSlice.productSelected,
+  );
 
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
   const navigation = useNavigation<NavigationProp>();
+  const dispatch = useAppDispatch();
+
+  // Hidden NavBar when open the page
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(visibleNavbar(false));
+    }, [dispatch]),
+  );
 
   return (
     <View style={styles.container}>
@@ -21,13 +38,12 @@ export default function ProductScreen() {
           style={styles.backIcon}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.title}>Watchlist</Text>
-        <TrashIcon name="trash" size={20} style={styles.trashIcon} />
+        <FavIcon name="heart-o" size={32} style={styles.favIcon} />
       </View>
 
       <View style={styles.imageWrapper}>
         <Image
-          source={require('../../../../assets/images/xbox.png')} // replace with your shoe image
+          source={images[productSelected?.img ?? 'default.png']} // replace with your shoe image
           style={styles.productImage}
           resizeMode="contain"
         />
@@ -36,20 +52,17 @@ export default function ProductScreen() {
       {/* Product Info */}
       <View style={styles.infoWrapper}>
         <View style={styles.ratingRow}>
-          <Text style={styles.title}>Xbox Series X</Text>
+          <Text style={styles.title}>{productSelected?.name}</Text>
           <View style={styles.rating}>
             <Icon name="star" size={19} color="#FFD700" />
             <Text style={styles.ratingText}>4.5</Text>
           </View>
         </View>
-        <Text style={styles.description}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto,
-          veritatis.
-        </Text>
+        <Text style={styles.description}>{productSelected?.description}</Text>
 
         {/* Bottom */}
         <View style={styles.bottomBar}>
-          <Text style={styles.price}>$269.00</Text>
+          <Text style={styles.price}>${productSelected?.price}</Text>
           <TouchableOpacity style={styles.cartButton}>
             <Text style={styles.cartText}> Add To Cart</Text>
           </TouchableOpacity>
@@ -66,7 +79,7 @@ const styles = StyleSheet.create({
   },
   header: { padding: 5, flexDirection: 'row', justifyContent: 'space-between' },
   backIcon: { marginTop: 40, marginLeft: 20 },
-  trashIcon: { marginTop: 40, marginRight: 20, color: '#afafafff' },
+  favIcon: { marginTop: 40, marginRight: 20, color: '#000000ff' },
   imageWrapper: {
     alignItems: 'center',
     justifyContent: 'center',

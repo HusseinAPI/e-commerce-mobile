@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Product } from '../types/productType';
+import { ProductType } from '../types/productType';
 
 interface ProductState {
-  products: Product[];
+  products: ProductType[];
   categSelected: string;
   pageSelected: string;
   visibilityOfNav: boolean;
+  productSelected: ProductType | null;
 }
 
 export const getProducts = createAsyncThunk(
@@ -33,6 +34,7 @@ const initialState: ProductState = {
   categSelected: 'All',
   pageSelected: 'home',
   visibilityOfNav: true,
+  productSelected: null,
 };
 
 const productSlice = createSlice({
@@ -53,6 +55,11 @@ const productSlice = createSlice({
     visibleNavbar: (state, action) => {
       state.visibilityOfNav = action.payload;
     },
+
+    // Display Selected Product Details
+    selectProduct: (state, action) => {
+      state.productSelected = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addCase(getProducts.fulfilled, (state, action) => {
@@ -61,6 +68,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { selectCategory, selectPage, visibleNavbar } =
+export const { selectCategory, selectPage, visibleNavbar, selectProduct } =
   productSlice.actions;
 export default productSlice.reducer;

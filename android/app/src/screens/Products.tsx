@@ -102,6 +102,7 @@ export default function Products() {
                   imgWidth={Number(elem.width)}
                   imgHeight={Number(elem.height)}
                   imgMargin={5}
+                  product={elem}
                 />
               ))
             : null}

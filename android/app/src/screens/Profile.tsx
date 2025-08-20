@@ -49,7 +49,6 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     if (!user) navigation.navigate('SignIn');
-    console.log(user);
   }, [user, navigation]);
 
   return (
