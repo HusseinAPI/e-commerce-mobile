@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import {
   View,
@@ -8,13 +9,12 @@ import {
   Pressable,
 } from 'react-native';
 import NoFavIcon from 'react-native-vector-icons/FontAwesome';
-import IsFavIcon from 'react-native-vector-icons/FontAwesome';
 import AddtCart from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { useAppDispatch } from '../store/hooks';
-import { selectProduct } from '../store/productSlice';
+import { addToFavourite, selectProduct } from '../store/productSlice';
 import { ProductType } from '../types/productType';
 
 type ProductProps = {
@@ -49,7 +49,6 @@ export default function Product({
 
   const selectProductHandler = (item: ProductType) => {
     dispatch(selectProduct(item));
-    console.log(item);
     navigation.navigate('ProductScreen');
   };
 
@@ -93,7 +92,18 @@ export default function Product({
               bottom: 5,
             }}
           >
-            <NoFavIcon name="heart-o" size={24} style={styles.favIcon} />
+            <Pressable onPress={() => dispatch(addToFavourite(product))}>
+              {({ pressed }) => (
+                <NoFavIcon
+                  name={pressed ? 'heart' : 'heart-o'}
+                  size={24}
+                  style={{
+                    color: pressed ? '#ff0000' : '#000',
+                    marginLeft: 110,
+                  }}
+                />
+              )}
+            </Pressable>
             <AddtCart name="squared-plus" size={24} style={styles.addIcon} />
           </View>
         </View>
@@ -121,10 +131,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 700,
     marginLeft: 15,
-  },
-  favIcon: {
-    marginLeft: 110,
-    color: '#2b2a2aff',
   },
   addIcon: {
     marginLeft: 110,

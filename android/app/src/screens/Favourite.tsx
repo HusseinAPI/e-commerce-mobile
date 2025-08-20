@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   Image,
-  ImageSourcePropType,
+  Pressable,
 } from 'react-native';
 import BackIcon from 'react-native-vector-icons/Feather';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
@@ -15,99 +15,46 @@ import AddtCart from 'react-native-vector-icons/Entypo';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
-import { selectPage, visibleNavbar } from '../store/productSlice';
-import { useAppDispatch } from '../store/hooks';
+import {
+  selectPage,
+  visibleNavbar,
+  removeFromFav,
+} from '../store/productSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { RootState } from '../store';
+import { images } from '../../../../assets/images';
+import { ProductType } from '../types/productType';
 
 export default function Favourite() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: '1',
-      name: 'Nike Air Max 200',
-      price: 240,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#ffe6e6',
-    },
-    {
-      id: '2',
-      name: 'Excee Sneakers',
-      price: 260,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#e6f0ff',
-    },
-    {
-      id: '3',
-      name: 'Air Max Motion 2',
-      price: 290,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#e6ffe6',
-    },
-    {
-      id: '4',
-      name: 'Leather Sneakers',
-      price: 270,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#fff5e6',
-    },
-    {
-      id: '5',
-      name: 'Nike Air Max 200',
-      price: 240,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#ffe6f0',
-    },
-    {
-      id: '6',
-      name: 'Nike Air Max 200',
-      price: 240,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#ffe6f0',
-    },
-    {
-      id: '7',
-      name: 'Nike Air Max 200',
-      price: 240,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#ffe6f0',
-    },
-  ]);
+  const favourites = useAppSelector(
+    (state: RootState) => state.productSlice.favourites,
+  );
 
   type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
   const navigation = useNavigation<NavigationProp>();
   const dispatch = useAppDispatch();
 
-  type CartItem = {
-    id: string;
-    name: string;
-    price: number;
-    qty: number;
-    image: ImageSourcePropType;
-    bg: string;
-  };
-
-  const renderItem = ({ item }: { item: CartItem }) => (
+  const renderItem = ({ item }: { item: ProductType }) => (
     <View style={styles.card}>
-      <View style={[styles.imageWrapper, { backgroundColor: item.bg }]}>
-        <Image source={item.image} style={styles.image} />
+      <View style={[styles.imageWrapper]}>
+        <Image source={images[item.img]} style={styles.image} />
       </View>
       <View style={styles.details}>
         <View>
-          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.name}>{item.name.slice(0, 15)}</Text>
           <Text style={styles.price}>${item.price.toFixed(2)}</Text>
         </View>
         <View>
-          <IsFavIcon
-            name="heart"
-            size={24}
-            style={{ color: 'red', marginBottom: 10 }}
-          />
+          <Pressable
+            onPress={() => dispatch(removeFromFav(item))}
+            style={({ pressed }) => [
+              { marginBottom: 10 },
+              pressed && { transform: [{ scale: 1.2 }], opacity: 0.5 },
+            ]}
+          >
+            <IsFavIcon name="heart" size={24} style={{ color: 'red' }} />
+          </Pressable>
           <AddtCart
             name="squared-plus"
             size={27}
@@ -149,8 +96,8 @@ export default function Favourite() {
       >
         <View style={{ marginTop: 30 }}>
           <FlatList
-            data={cartItems}
-            keyExtractor={item => item.id}
+            data={favourites}
+            keyExtractor={item => item._id}
             renderItem={renderItem}
             contentContainerStyle={{ paddingBottom: 20 }}
           />
