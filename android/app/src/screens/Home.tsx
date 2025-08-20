@@ -167,6 +167,7 @@ export default function Home() {
                         imgWidth={Number(elem.width)}
                         imgHeight={Number(elem.height)}
                         imgMargin={5}
+                        product={elem}
                       />
                     );
                 })
@@ -188,6 +189,7 @@ export default function Home() {
                         imgWidth={Number(elem.width)}
                         imgHeight={Number(elem.height)}
                         imgMargin={5}
+                        product={elem}
                       />
                     );
                 })

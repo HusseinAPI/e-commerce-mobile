@@ -13,6 +13,9 @@ import AddtCart from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
+import { useAppDispatch } from '../store/hooks';
+import { selectProduct } from '../store/productSlice';
+import { ProductType } from '../types/productType';
 
 type ProductProps = {
   name: string;
@@ -23,6 +26,7 @@ type ProductProps = {
   imgWidth: number;
   imgHeight: number;
   imgMargin: number;
+  product: ProductType;
 };
 
 export default function Product({
@@ -34,15 +38,23 @@ export default function Product({
   imgWidth,
   imgHeight,
   imgMargin,
+  product,
 }: ProductProps) {
   type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
   const navigation = useNavigation<NavigationProp>();
+  const dispatch = useAppDispatch();
 
   const marginTop = Number(imgHeight) < 130 ? 30 : 0;
 
+  const selectProductHandler = (item: ProductType) => {
+    dispatch(selectProduct(item));
+    console.log(item);
+    navigation.navigate('ProductScreen');
+  };
+
   return (
-    <Pressable onPress={() => navigation.navigate('ProductScreen')}>
+    <Pressable onPress={() => selectProductHandler(product)}>
       {({ pressed }) => (
         <View
           style={[
