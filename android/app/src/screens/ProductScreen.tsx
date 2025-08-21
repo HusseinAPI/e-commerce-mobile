@@ -1,15 +1,19 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BackIcon from 'react-native-vector-icons/Feather';
 import FavIcon from 'react-native-vector-icons/FontAwesome';
-import AddtCart from 'react-native-vector-icons/Entypo';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { RootState } from '../store';
-import { visibleNavbar } from '../store/productSlice';
+import {
+  addToFavourite,
+  removeFromFav,
+  visibleNavbar,
+} from '../store/productSlice';
 import { images } from '../../../../assets/images';
 
 export default function ProductScreen() {
@@ -29,6 +33,20 @@ export default function ProductScreen() {
     }, [dispatch]),
   );
 
+  // Set the favourite products icon
+
+  const favourites = useAppSelector(
+    (state: RootState) => state.productSlice.favourites,
+  );
+
+  const existInFav = favourites.some(fav => fav._id === productSelected?._id);
+
+  // Set the Cart products icon
+
+  const cart = useAppSelector((state: RootState) => state.productSlice.cart);
+
+  const existInCart = cart.some(fav => fav._id === productSelected?._id);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -38,12 +56,26 @@ export default function ProductScreen() {
           style={styles.backIcon}
           onPress={() => navigation.goBack()}
         />
-        <FavIcon name="heart-o" size={32} style={styles.favIcon} />
+        {existInFav ? (
+          <FavIcon
+            name="heart"
+            size={32}
+            style={{ marginTop: 40, marginRight: 20, color: '#ff0000ff' }}
+            onPress={() => dispatch(removeFromFav(productSelected!))}
+          />
+        ) : (
+          <FavIcon
+            name="heart-o"
+            size={32}
+            style={styles.favIcon}
+            onPress={() => dispatch(addToFavourite(productSelected!))}
+          />
+        )}
       </View>
 
       <View style={styles.imageWrapper}>
         <Image
-          source={images[productSelected?.img ?? 'default.png']} // replace with your shoe image
+          source={images[productSelected?.img ?? 'default.png']}
           style={styles.productImage}
           resizeMode="contain"
         />
@@ -63,9 +95,22 @@ export default function ProductScreen() {
         {/* Bottom */}
         <View style={styles.bottomBar}>
           <Text style={styles.price}>${productSelected?.price}</Text>
-          <TouchableOpacity style={styles.cartButton}>
-            <Text style={styles.cartText}> Add To Cart</Text>
-          </TouchableOpacity>
+          {existInCart ? (
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#a5affbff',
+                paddingVertical: 10,
+                paddingHorizontal: 30,
+                borderRadius: 20,
+              }}
+            >
+              <Text style={styles.cartText}>Exist In Cart</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.cartButton}>
+              <Text style={styles.cartText}> Add To Cart</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>

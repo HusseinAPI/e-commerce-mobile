@@ -19,6 +19,9 @@ import {
   selectPage,
   visibleNavbar,
   removeFromFav,
+  addToCart,
+  removeFromCart,
+  setFavEmpty,
 } from '../store/productSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { RootState } from '../store';
@@ -29,6 +32,8 @@ export default function Favourite() {
   const favourites = useAppSelector(
     (state: RootState) => state.productSlice.favourites,
   );
+
+  const cart = useAppSelector((state: RootState) => state.productSlice.cart);
 
   type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -53,13 +58,27 @@ export default function Favourite() {
               pressed && { transform: [{ scale: 1.2 }], opacity: 0.5 },
             ]}
           >
-            <IsFavIcon name="heart" size={24} style={{ color: 'red' }} />
+            <IsFavIcon
+              name="heart"
+              size={24}
+              style={{ color: 'red' }}
+              onPress={() => dispatch(removeFromFav(item))}
+            />
           </Pressable>
-          <AddtCart
-            name="squared-plus"
-            size={27}
-            // style={{ color: '#a6aa53ff' }}
-          />
+          {cart.some(fav => fav._id === item._id) ? (
+            <AddtCart
+              name="squared-plus"
+              size={27}
+              style={{ color: '#6d6defff' }}
+              onPress={() => dispatch(removeFromCart(item))}
+            />
+          ) : (
+            <AddtCart
+              name="squared-plus"
+              size={27}
+              onPress={() => dispatch(addToCart(item))}
+            />
+          )}
         </View>
       </View>
     </View>
@@ -84,7 +103,12 @@ export default function Favourite() {
           onPress={() => navigation.goBack()}
         />
         <Text style={styles.title}>Watchlist</Text>
-        <TrashIcon name="trash" size={20} style={styles.trashIcon} />
+        <TrashIcon
+          name="trash"
+          size={20}
+          style={styles.trashIcon}
+          onPress={() => dispatch(setFavEmpty())}
+        />
       </View>
 
       <View
