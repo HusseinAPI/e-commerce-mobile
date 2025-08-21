@@ -6,7 +6,6 @@ import {
   StyleSheet,
   FlatList,
   Image,
-  ImageSourcePropType,
   TouchableOpacity,
 } from 'react-native';
 import BackIcon from 'react-native-vector-icons/Feather';
@@ -15,87 +14,29 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
 import { selectPage, visibleNavbar } from '../store/productSlice';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { RootState } from '../store';
+import { ProductType } from '../types/productType';
+import { images } from '../../../../assets/images';
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: '1',
-      name: 'Nike Air Max 200',
-      price: 240,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#ffe6e6',
-    },
-    {
-      id: '2',
-      name: 'Excee Sneakers',
-      price: 260,
-      qty: 1,
-      image: require('../../../../assets/images/razer.png'),
-      bg: '#e6f0ff',
-    },
-    {
-      id: '3',
-      name: 'Air Max Motion 2',
-      price: 290,
-      qty: 1,
-      image: require('../../../../assets/images/xbox.png'),
-      bg: '#e6ffe6',
-    },
-    {
-      id: '4',
-      name: 'Leather Sneakers',
-      price: 270,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#fff5e6',
-    },
-    {
-      id: '5',
-      name: 'Nike Air Max 200',
-      price: 240,
-      qty: 1,
-      image: require('../../../../assets/images/s24.png'),
-      bg: '#ffe6f0',
-    },
-  ]);
+  const cart = useAppSelector((state: RootState) => state.productSlice.cart);
+
+  const [quantity, setQuantity] = useState<number>(1);
 
   type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
   const navigation = useNavigation<NavigationProp>();
   const dispatch = useAppDispatch();
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.qty,
-    0,
-  );
+  const subtotal = cart.reduce((acc, item) => acc + item.price * quantity, 0);
   const taxes = 40;
   const total = subtotal + taxes;
 
-  const updateQty = (id: string, change: number) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item.id === id
-          ? { ...item, qty: Math.max(1, item.qty + change) }
-          : item,
-      ),
-    );
-  };
-
-  type CartItem = {
-    id: string;
-    name: string;
-    price: number;
-    qty: number;
-    image: ImageSourcePropType;
-    bg: string;
-  };
-
-  const renderItem = ({ item }: { item: CartItem }) => (
+  const renderItem = ({ item }: { item: ProductType }) => (
     <View style={styles.card}>
-      <View style={[styles.imageWrapper, { backgroundColor: item.bg }]}>
-        <Image source={item.image} style={styles.image} />
+      <View style={[styles.imageWrapper]}>
+        <Image source={images[item.img]} style={styles.image} />
       </View>
       <View style={styles.details}>
         <View>
@@ -105,14 +46,20 @@ export default function Cart() {
       </View>
       <View style={styles.qtyContainer}>
         <TouchableOpacity
-          onPress={() => updateQty(item.id, -1)}
+          onPress={() => {
+            if (quantity > 1) {
+              setQuantity(quantity - 1);
+            }
+          }}
           style={styles.qtyBtn}
         >
           <Text style={styles.qtyText}>-</Text>
         </TouchableOpacity>
-        <Text style={styles.qty}>{item.qty}</Text>
+        <Text style={styles.qty}>{quantity}</Text>
         <TouchableOpacity
-          onPress={() => updateQty(item.id, 1)}
+          onPress={() => {
+            setQuantity(quantity + 1);
+          }}
           style={styles.qtyBtn}
         >
           <Text style={styles.qtyText}>+</Text>
@@ -153,8 +100,8 @@ export default function Cart() {
       >
         <View style={{ marginTop: 30 }}>
           <FlatList
-            data={cartItems}
-            keyExtractor={item => item.id}
+            data={cart}
+            keyExtractor={item => item._id}
             renderItem={renderItem}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 10 }}

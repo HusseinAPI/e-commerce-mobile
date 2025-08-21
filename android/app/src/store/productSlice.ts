@@ -89,6 +89,63 @@ export const removeFromFav = createAsyncThunk(
   },
 );
 
+// Add Product to Cart
+
+export const addToCart = createAsyncThunk(
+  'product/addToCart',
+  async (item: ProductType, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const storedCart = await AsyncStorage.getItem('cart');
+      const cart: ProductType[] = storedCart ? JSON.parse(storedCart) : [];
+
+      const isAlreadyInCart = cart.some(prod => prod._id === item._id);
+      let updatedCart;
+
+      if (isAlreadyInCart) {
+        updatedCart = [...cart];
+      } else {
+        updatedCart = [...cart, item];
+      }
+
+      await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
+      return updatedCart;
+    } catch (error) {
+      if (error instanceof Error) {
+        rejectWithValue(error.message);
+      } else {
+        rejectWithValue(error);
+      }
+    }
+  },
+);
+
+// Remove Product from Cart
+
+export const removeFromCart = createAsyncThunk(
+  'product/removeFromCart',
+  async (item: ProductType, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const storedCart = await AsyncStorage.getItem('cart');
+      const cart: ProductType[] = storedCart ? JSON.parse(storedCart) : [];
+
+      const productRemoving = cart.filter(prod => prod._id !== item._id);
+
+      const updatedCart = productRemoving;
+
+      await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
+      return updatedCart;
+    } catch (error) {
+      if (error instanceof Error) {
+        rejectWithValue(error.message);
+      } else {
+        rejectWithValue(error);
+      }
+    }
+  },
+);
+
 interface ProductState {
   products: ProductType[];
   categSelected: string;
@@ -96,6 +153,7 @@ interface ProductState {
   visibilityOfNav: boolean;
   productSelected: ProductType | null;
   favourites: ProductType[];
+  cart: ProductType[];
 }
 
 const initialState: ProductState = {
@@ -105,6 +163,7 @@ const initialState: ProductState = {
   visibilityOfNav: true,
   productSelected: null,
   favourites: [],
+  cart: [],
 };
 
 const productSlice = createSlice({
@@ -130,6 +189,18 @@ const productSlice = createSlice({
     selectProduct: (state, action) => {
       state.productSelected = action.payload;
     },
+
+    // Display Selected Product Details
+    setFavEmpty: state => {
+      AsyncStorage.removeItem('favourites');
+      state.favourites = [];
+    },
+
+    // Display Selected Product Details
+    setCartEmpty: state => {
+      AsyncStorage.removeItem('cart');
+      state.cart = [];
+    },
   },
   extraReducers: builder => {
     builder
@@ -141,10 +212,22 @@ const productSlice = createSlice({
       })
       .addCase(removeFromFav.fulfilled, (state, action) => {
         state.favourites = action.payload;
+      })
+      .addCase(addToCart.fulfilled, (state, action) => {
+        state.cart = action.payload;
+      })
+      .addCase(removeFromCart.fulfilled, (state, action) => {
+        state.cart = action.payload;
       });
   },
 });
 
-export const { selectCategory, selectPage, visibleNavbar, selectProduct } =
-  productSlice.actions;
+export const {
+  selectCategory,
+  selectPage,
+  visibleNavbar,
+  selectProduct,
+  setFavEmpty,
+  setCartEmpty,
+} = productSlice.actions;
 export default productSlice.reducer;

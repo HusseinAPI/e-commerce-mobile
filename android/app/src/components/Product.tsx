@@ -9,13 +9,20 @@ import {
   Pressable,
 } from 'react-native';
 import NoFavIcon from 'react-native-vector-icons/FontAwesome';
-import AddtCart from 'react-native-vector-icons/Entypo';
+import CartIcon from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { useAppDispatch } from '../store/hooks';
-import { addToFavourite, selectProduct } from '../store/productSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import {
+  addToCart,
+  addToFavourite,
+  removeFromCart,
+  removeFromFav,
+  selectProduct,
+} from '../store/productSlice';
 import { ProductType } from '../types/productType';
+import { RootState } from '../store';
 
 type ProductProps = {
   name: string;
@@ -47,10 +54,26 @@ export default function Product({
 
   const marginTop = Number(imgHeight) < 130 ? 30 : 0;
 
+  // Click Product
+
   const selectProductHandler = (item: ProductType) => {
     dispatch(selectProduct(item));
     navigation.navigate('ProductScreen');
   };
+
+  // Set the Favourite products icon
+
+  const favourites = useAppSelector(
+    (state: RootState) => state.productSlice.favourites,
+  );
+
+  const ExistInFav = favourites.some(fav => fav._id === product._id);
+
+  // Set the Cart products icon
+
+  const cart = useAppSelector((state: RootState) => state.productSlice.cart);
+
+  const ExistInCart = cart.some(fav => fav._id === product._id);
 
   return (
     <Pressable onPress={() => selectProductHandler(product)}>
@@ -92,19 +115,48 @@ export default function Product({
               bottom: 5,
             }}
           >
-            <Pressable onPress={() => dispatch(addToFavourite(product))}>
-              {({ pressed }) => (
-                <NoFavIcon
-                  name={pressed ? 'heart' : 'heart-o'}
+            <Pressable>
+              {({ pressed }) =>
+                ExistInFav ? (
+                  <NoFavIcon
+                    name="heart"
+                    size={24}
+                    style={{
+                      color: pressed ? '#cc0000' : '#ff0000ff',
+                      marginLeft: 110,
+                    }}
+                    onPress={() => dispatch(removeFromFav(product))}
+                  />
+                ) : (
+                  <NoFavIcon
+                    name="heart-o"
+                    size={24}
+                    style={{
+                      color: '#858484ff',
+                      marginLeft: 110,
+                    }}
+                    onPress={() => dispatch(addToFavourite(product))}
+                  />
+                )
+              }
+            </Pressable>
+            <Pressable>
+              {ExistInCart ? (
+                <CartIcon
+                  name="squared-plus"
                   size={24}
-                  style={{
-                    color: pressed ? '#ff0000' : '#000',
-                    marginLeft: 110,
-                  }}
+                  style={styles.rmvCartIcon}
+                  onPress={() => dispatch(removeFromCart(product))}
+                />
+              ) : (
+                <CartIcon
+                  name="squared-plus"
+                  size={24}
+                  style={styles.addCartIcon}
+                  onPress={() => dispatch(addToCart(product))}
                 />
               )}
             </Pressable>
-            <AddtCart name="squared-plus" size={24} style={styles.addIcon} />
           </View>
         </View>
       )}
@@ -132,9 +184,14 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     marginLeft: 15,
   },
-  addIcon: {
+  addCartIcon: {
     marginLeft: 110,
     marginTop: 15,
-    color: '#2b2a2aff', // #6d6defff
+    color: '#858484ff',
+  },
+  rmvCartIcon: {
+    marginLeft: 110,
+    marginTop: 15,
+    color: '#6d6defff',
   },
 });
