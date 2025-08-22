@@ -10,7 +10,9 @@ import type { RootStackParamList } from '../navigation/types';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { RootState } from '../store';
 import {
+  addToCart,
   addToFavourite,
+  removeFromCart,
   removeFromFav,
   visibleNavbar,
 } from '../store/productSlice';
@@ -104,11 +106,21 @@ export default function ProductScreen() {
                 borderRadius: 20,
               }}
             >
-              <Text style={styles.cartText}>Exist In Cart</Text>
+              <Text
+                style={styles.cartText}
+                onPress={() => dispatch(removeFromCart(productSelected!))}
+              >
+                Exist In Cart
+              </Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.cartButton}>
-              <Text style={styles.cartText}> Add To Cart</Text>
+              <Text
+                style={styles.cartText}
+                onPress={() => dispatch(addToCart(productSelected!))}
+              >
+                Add To Cart
+              </Text>
             </TouchableOpacity>
           )}
         </View>

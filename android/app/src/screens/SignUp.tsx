@@ -18,6 +18,7 @@ import type { RootStackParamList } from '../navigation/types';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { signUp } from '../store/authSlice';
 import { RootState } from '../store';
+import { UserData } from '../types/UserData';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,10 +49,12 @@ export default function Login() {
   };
 
   // Check Success Auth navigate to Home
-  const user = useAppSelector((state: RootState) => state.authSlice.user);
+  const user = useAppSelector(
+    (state: RootState) => state.authSlice.user as UserData | null,
+  );
 
   useEffect(() => {
-    if (user) {
+    if (user?.token) {
       navigation.navigate('Profile');
     }
   }, [user, navigation]);
