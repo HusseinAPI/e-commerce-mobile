@@ -13,7 +13,11 @@ import TrashIcon from 'react-native-vector-icons/FontAwesome5';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
-import { selectPage, visibleNavbar } from '../store/productSlice';
+import {
+  addCheckOutInfo,
+  selectPage,
+  visibleNavbar,
+} from '../store/productSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { RootState } from '../store';
 import { ProductType } from '../types/productType';
@@ -22,18 +26,25 @@ import { images } from '../../../../assets/images';
 export default function Cart() {
   const cart = useAppSelector((state: RootState) => state.productSlice.cart);
 
-  const [quantity, setQuantity] = useState<number>(1);
+  const [quantities, setQuantities] = useState<number[]>(cart.map(() => 1));
 
   type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
   const navigation = useNavigation<NavigationProp>();
   const dispatch = useAppDispatch();
 
-  const subtotal = cart.reduce((acc, item) => acc + item.price * quantity, 0);
-  const taxes = 40;
-  const total = subtotal + taxes;
+  const subtotal = cart.reduce(
+    (acc, item, i) => acc + item.price * quantities[i],
+    0,
+  );
 
-  const renderItem = ({ item }: { item: ProductType }) => (
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: ProductType;
+    index: number;
+  }) => (
     <View style={styles.card}>
       <View style={[styles.imageWrapper]}>
         <Image source={images[item.img]} style={styles.image} />
@@ -47,18 +58,22 @@ export default function Cart() {
       <View style={styles.qtyContainer}>
         <TouchableOpacity
           onPress={() => {
-            if (quantity > 1) {
-              setQuantity(quantity - 1);
+            if (quantities[index] > 1) {
+              const newQuantities = [...quantities];
+              newQuantities[index] -= 1;
+              setQuantities(newQuantities);
             }
           }}
           style={styles.qtyBtn}
         >
           <Text style={styles.qtyText}>-</Text>
         </TouchableOpacity>
-        <Text style={styles.qty}>{quantity}</Text>
+        <Text style={styles.qty}>{quantities[index]}</Text>
         <TouchableOpacity
           onPress={() => {
-            setQuantity(quantity + 1);
+            const newQuantities = [...quantities];
+            newQuantities[index] += 1;
+            setQuantities(newQuantities);
           }}
           style={styles.qtyBtn}
         >
@@ -76,6 +91,23 @@ export default function Cart() {
       dispatch(visibleNavbar(false));
     }, [dispatch]),
   );
+
+  // Add info to CheckOut
+
+  const addCheckInfoHanlder = () => {
+    const now = new Date();
+    const date = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
+
+    const checkoutInfo = cart.map((elem, i) => ({
+      id: elem._id,
+      name: elem.name,
+      price: elem.price,
+      date: date,
+      quantity: quantities[i],
+    }));
+    dispatch(addCheckOutInfo(checkoutInfo));
+    navigation.navigate('CheckOut');
+  };
 
   return (
     <View style={styles.container}>
@@ -109,24 +141,18 @@ export default function Cart() {
         </View>
       </View>
 
-      <View style={styles.summary}>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryText}>Subtotal:</Text>
-          <Text style={styles.summaryValue}>${subtotal}</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryText}>Taxes:</Text>
-          <Text style={styles.summaryValue}>${taxes}</Text>
-        </View>
-      </View>
-
       <View style={styles.footer}>
-        <Text style={styles.total}>${total.toFixed(2)}</Text>
+        <Text style={styles.total}>${subtotal.toFixed(2)}</Text>
         <TouchableOpacity
           style={styles.checkoutBtn}
           onPress={() => navigation.navigate('CheckOut')}
         >
-          <Text style={styles.checkoutText}>Check Out</Text>
+          <Text
+            style={styles.checkoutText}
+            onPress={() => addCheckInfoHanlder()}
+          >
+            Check Out
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -185,32 +211,11 @@ const styles = StyleSheet.create({
   },
   qtyText: { fontSize: 18, color: '#333' },
   qty: { marginHorizontal: 8, fontSize: 16, fontWeight: 'bold' },
-  summary: {
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    marginVertical: 15,
-  },
-  summaryText: {
-    fontSize: 16,
-    color: '#aaa9a9ff',
-    fontWeight: 600,
-    letterSpacing: 1.7,
-  },
-  summaryValue: {
-    fontSize: 16,
-    fontWeight: 600,
-    color: '#a6aa53ff',
-    marginLeft: 5,
-  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: 80,
     paddingVertical: 20,
     paddingHorizontal: 20,
   },

@@ -10,4 +10,5 @@ export type ProductType = {
   favourite: number;
   purchasetimes: number;
   sold: number;
+  quantity: number;
 };
