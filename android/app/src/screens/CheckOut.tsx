@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ProductType } from '../types/productType';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { RootState } from '../store';
-import { makeOrder } from '../store/productSlice';
+import { makeOrder, setCartEmpty } from '../store/productSlice';
 
 export default function Checkout() {
   const checkInfo = useAppSelector(
@@ -59,7 +59,7 @@ export default function Checkout() {
         <View style={styles.cardsContainer}>
           <FlatList
             data={checkInfo}
-            keyExtractor={item => item._id}
+            keyExtractor={item => item.id}
             renderItem={renderProduct}
             contentContainerStyle={{ padding: 16 }}
           />
@@ -85,7 +85,10 @@ export default function Checkout() {
         <TouchableOpacity activeOpacity={0.9} style={styles.cta}>
           <Text
             style={styles.ctaText}
-            onPress={() => dispatch(makeOrder(checkInfo))}
+            onPress={() => {
+              dispatch(makeOrder(checkInfo));
+              dispatch(setCartEmpty());
+            }}
           >
             Continue
           </Text>

@@ -1,11 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
-interface UserData {
-  email: string;
-  password: string;
-  fullName?: string;
-  phone?: string;
-}
+import { UserData } from '../types/UserData';
 
 export const signIn = createAsyncThunk(
   'auth/signIn',

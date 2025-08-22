@@ -146,6 +146,34 @@ export const removeFromCart = createAsyncThunk(
   },
 );
 
+// Get Orders
+
+export const getOrders = createAsyncThunk(
+  'product/getOrders',
+  async (userId, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await fetch('http://192.168.88.226:3001/orders', {
+        method: 'POST',
+        body: JSON.stringify(userId),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer${userId}`,
+        },
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        rejectWithValue(error.message);
+      } else {
+        rejectWithValue(error);
+      }
+    }
+  },
+);
+
 // Make Order after checkOut
 
 export const makeOrder = createAsyncThunk(
@@ -160,6 +188,7 @@ export const makeOrder = createAsyncThunk(
           body: JSON.stringify(data),
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer${data.userId}`,
           },
         },
       );
@@ -260,6 +289,9 @@ const productSlice = createSlice({
         state.cart = action.payload;
       })
       .addCase(makeOrder.fulfilled, (state, action) => {
+        state.orders = action.payload;
+      })
+      .addCase(getOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
       });
   },

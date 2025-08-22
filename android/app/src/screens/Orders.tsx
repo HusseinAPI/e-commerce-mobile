@@ -1,102 +1,49 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { RootState } from '../store';
+import { getOrders } from '../store/productSlice';
+import { UserData } from '../types/UserData';
 
 type OrderType = {
-  id: string;
-  type: string;
-  description: string;
-  transactionId: string;
-  amount: string;
-  status: string;
-  date: string;
+  _id: string;
+  total: string;
+  createdAt: Date;
 };
 
-const orders: OrderType[] = [
-  {
-    id: '1',
-    type: 'Cash-in',
-    description: 'From ABC Bank ATM',
-    transactionId: '564925374920',
-    amount: '$100.00',
-    status: 'confirmed',
-    date: '17 Sep 2023, 10:34 AM',
-  },
-  {
-    id: '2',
-    type: 'Cashback from purchase',
-    description: 'Purchase from Amazon.com',
-    transactionId: '685746354219',
-    amount: '$1.75',
-    status: 'confirmed',
-    date: '16 Sep 2023, 16:08 PM',
-  },
-  {
-    id: '3',
-    type: 'Transfer to card',
-    description: '',
-    transactionId: '698094554317',
-    amount: '$9000.00',
-    status: 'confirmed',
-    date: '16 Sep 2023, 11:21 AM',
-  },
-  {
-    id: '4',
-    type: 'Transfer to card',
-    description: 'Not enough funds',
-    transactionId: '097967542786',
-    amount: '$9267.00',
-    status: 'canceled',
-    date: '15 Sep 2023, 10:11 AM',
-  },
-  {
-    id: '5',
-    type: 'Cashback from purchase',
-    description: 'Purchase from Books.com',
-    transactionId: '765230978421',
-    amount: '$3.21',
-    status: 'confirmed',
-    date: '14 Sep 2023, 18:59 PM',
-  },
-  {
-    id: '6',
-    type: 'Transfer to card',
-    description: '',
-    transactionId: '123456789012',
-    amount: '$70.00',
-    status: 'confirmed',
-    date: '13 Sep 2023, 09:30 AM',
-  },
-];
-
 const OrderHistory = () => {
-  const renderItem = ({ item }: { item: OrderType }) => (
+  const orders = useAppSelector(
+    (state: RootState) => state.productSlice.orders,
+  );
+
+  const user = useAppSelector(
+    (state: RootState) => state.authSlice.user as UserData | null,
+  );
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getOrders(user.token));
+  }, [dispatch, user?.token]);
+
+  const renderItem = ({ item }: { item: OrderType; index: number }) => (
     <View style={styles.card}>
       <View style={styles.icon}>
-        <MaterialIcons name="credit-card" size={24} color="#a6aa53ff" />
+        <MaterialIcons name="credit-card" size={30} color="#a6aa53ff" />
       </View>
       <View style={styles.info}>
-        <Text style={styles.type}>{item.type}</Text>
-        {item.description ? (
-          <Text style={styles.description}>{item.description}</Text>
-        ) : null}
-        <Text style={styles.transactionId}>
-          Transaction ID: {item.transactionId}
-        </Text>
+        <Text style={styles.type}>Order #{item._id.slice(12)}</Text>
+
+        <Text style={styles.transactionId}>Transaction ID: {item._id}</Text>
       </View>
       <View style={styles.right}>
-        <Text style={styles.amount}>{item.amount}</Text>
-        <Text
-          style={[
-            styles.status,
-            { color: item.status === 'confirmed' ? 'green' : 'red' },
-          ]}
-        >
-          {item.status}
+        <Text style={styles.amount}>${item.total}</Text>
+        <Text style={styles.date}>
+          {item.createdAt.toString().slice(0, 10)}
         </Text>
-        <Text style={styles.date}>{item.date}</Text>
       </View>
     </View>
   );
@@ -112,7 +59,7 @@ const OrderHistory = () => {
       <View style={{ height: 450 }}>
         <FlatList
           data={orders}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item._id}
           renderItem={renderItem}
           contentContainerStyle={{ padding: 16 }}
         />
@@ -150,7 +97,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: '#f8f8ff',
-    padding: 12,
+    padding: 20,
     marginBottom: 12,
     borderRadius: 12,
     alignItems: 'center',
@@ -189,7 +136,7 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 12,
     color: '#999',
-    marginTop: 2,
+    marginTop: 15,
   },
 });
 

@@ -16,6 +16,7 @@ import type { RootStackParamList } from '../navigation/types';
 import {
   addCheckOutInfo,
   selectPage,
+  setCartEmpty,
   visibleNavbar,
 } from '../store/productSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -93,12 +94,14 @@ export default function Cart() {
   );
 
   // Add info to CheckOut
+  const user = useAppSelector((state: RootState) => state.authSlice.user);
 
   const addCheckInfoHanlder = () => {
     const now = new Date();
     const date = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
 
     const checkoutInfo = cart.map((elem, i) => ({
+      userId: user.token,
       id: elem._id,
       name: elem.name,
       price: elem.price,
@@ -119,7 +122,12 @@ export default function Cart() {
           onPress={() => navigation.goBack()}
         />
         <Text style={styles.title}>My Cart</Text>
-        <TrashIcon name="trash" size={20} style={styles.trashIcon} />
+        <TrashIcon
+          name="trash"
+          size={20}
+          style={styles.trashIcon}
+          onPress={() => dispatch(setCartEmpty())}
+        />
       </View>
 
       <View
