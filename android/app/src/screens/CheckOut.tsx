@@ -10,49 +10,38 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
-type ProductType = {
-  id: string;
-  name: string;
-  price: string;
-  date: string;
-};
-
-const products: ProductType[] = [
-  {
-    id: '1',
-    name: 'Purchase 1',
-    price: '76.99',
-    date: '22.09.2021',
-  },
-  {
-    id: '2',
-    name: 'Purchase 1',
-    price: '76.99',
-    date: '22.09.2021',
-  },
-  {
-    id: '3',
-    name: 'Purchase 1',
-    price: '76.99',
-    date: '22.09.2021',
-  },
-  {
-    id: '4',
-    name: 'Purchase 1',
-    price: '76.99',
-    date: '22.09.2021',
-  },
-];
+import { ProductType } from '../types/productType';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { RootState } from '../store';
+import { makeOrder } from '../store/productSlice';
 
 export default function Checkout() {
+  const checkInfo = useAppSelector(
+    (state: RootState) => state.productSlice.checkInfo,
+  );
+
+  const subtotal = checkInfo.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0,
+  );
+  const taxes = checkInfo
+    .reduce((acc, item) => acc + (item.price * 11) / 100, 0)
+    .toString()
+    .slice(0, 5);
+
+  const total = Number(subtotal) + Number(taxes);
+
+  const dispatch = useAppDispatch();
+
   const renderProduct = ({ item }: { item: ProductType }) => (
     <View style={styles.card}>
       <View style={styles.row}>
-        <Text style={styles.rowLabel}>{item.name}</Text>
+        <Text style={styles.rowLabel}>{item.name.slice(0, 15)}</Text>
         <Text style={styles.rowValue}>${item.price}</Text>
       </View>
-      <Text style={styles.cardSub}>{item.date}</Text>
+      <View style={styles.row}>
+        <Text style={styles.rowValue}>Qty:{item.quantity}</Text>
+      </View>
     </View>
   );
 
@@ -65,42 +54,41 @@ export default function Checkout() {
         </View>
       </View>
 
-      {/* Card Container  */}
       <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
         <Text style={styles.sectionTitle}>Summary</Text>
         <View style={styles.cardsContainer}>
           <FlatList
-            data={products}
-            keyExtractor={item => item.id}
+            data={checkInfo}
+            keyExtractor={item => item._id}
             renderItem={renderProduct}
             contentContainerStyle={{ padding: 16 }}
           />
         </View>
 
-        {/* Subtotal */}
         <View style={styles.row}>
           <Text style={styles.rowLabel}>Subtotal</Text>
-          <Text style={styles.rowValue}>$189.99</Text>
+          <Text style={styles.rowValue}>${subtotal}</Text>
         </View>
 
-        {/* VAT */}
         <View style={styles.row}>
-          <Text style={styles.rowLabel}>VAT (15%)</Text>
-          <Text style={styles.rowValue}>$28.49</Text>
+          <Text style={styles.rowLabel}>VAT (11%)</Text>
+          <Text style={styles.rowValue}>${taxes}</Text>
         </View>
 
-        {/* Divider */}
         <View style={styles.divider} />
 
-        {/* Total */}
         <View style={styles.row}>
           <Text style={[styles.rowLabel, styles.bold]}>Total</Text>
-          <Text style={[styles.rowValue, styles.bold]}>$218.48</Text>
+          <Text style={[styles.rowValue, styles.bold]}>${total}</Text>
         </View>
 
-        {/* Continue Button */}
         <TouchableOpacity activeOpacity={0.9} style={styles.cta}>
-          <Text style={styles.ctaText}>Continue</Text>
+          <Text
+            style={styles.ctaText}
+            onPress={() => dispatch(makeOrder(checkInfo))}
+          >
+            Continue
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

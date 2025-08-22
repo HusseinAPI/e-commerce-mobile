@@ -146,6 +146,37 @@ export const removeFromCart = createAsyncThunk(
   },
 );
 
+// Make Order after checkOut
+
+export const makeOrder = createAsyncThunk(
+  'product/makeOrder',
+  async (data: ProductType[], thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await fetch(
+        `http://192.168.88.226:3001/orders/storedOrder`,
+        {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        },
+      );
+
+      const order = await response.json();
+
+      return order;
+    } catch (error) {
+      if (error instanceof Error) {
+        rejectWithValue(error.message);
+      } else {
+        rejectWithValue(error);
+      }
+    }
+  },
+);
+
 interface ProductState {
   products: ProductType[];
   categSelected: string;
@@ -154,6 +185,8 @@ interface ProductState {
   productSelected: ProductType | null;
   favourites: ProductType[];
   cart: ProductType[];
+  checkInfo: ProductType[];
+  orders: [];
 }
 
 const initialState: ProductState = {
@@ -164,6 +197,8 @@ const initialState: ProductState = {
   productSelected: null,
   favourites: [],
   cart: [],
+  checkInfo: [],
+  orders: [],
 };
 
 const productSlice = createSlice({
@@ -201,6 +236,11 @@ const productSlice = createSlice({
       AsyncStorage.removeItem('cart');
       state.cart = [];
     },
+
+    // Add checkout info
+    addCheckOutInfo: (state, action) => {
+      state.checkInfo = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -218,6 +258,9 @@ const productSlice = createSlice({
       })
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.cart = action.payload;
+      })
+      .addCase(makeOrder.fulfilled, (state, action) => {
+        state.orders = action.payload;
       });
   },
 });
@@ -229,5 +272,6 @@ export const {
   selectProduct,
   setFavEmpty,
   setCartEmpty,
+  addCheckOutInfo,
 } = productSlice.actions;
 export default productSlice.reducer;
