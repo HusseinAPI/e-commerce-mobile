@@ -26,7 +26,7 @@ const OrderHistory = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getOrders(user.token));
+    dispatch(getOrders(user._id));
   }, [dispatch, user?.token]);
 
   const renderItem = ({ item }: { item: OrderType; index: number }) => (
