@@ -155,10 +155,10 @@ export const getOrders = createAsyncThunk(
     try {
       const response = await fetch('http://192.168.88.226:3001/orders', {
         method: 'POST',
-        body: JSON.stringify(userId),
+        body: JSON.stringify({ userId }),
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
-          Authorization: `Bearer${userId}`,
+          Authorization: `Bearer ${userId}`,
         },
       });
 
@@ -166,8 +166,10 @@ export const getOrders = createAsyncThunk(
       return data;
     } catch (error) {
       if (error instanceof Error) {
+        console.log(error);
         rejectWithValue(error.message);
       } else {
+        console.log(error);
         rejectWithValue(error);
       }
     }

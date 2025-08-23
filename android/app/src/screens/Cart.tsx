@@ -101,7 +101,7 @@ export default function Cart() {
     const date = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
 
     const checkoutInfo = cart.map((elem, i) => ({
-      userId: user.token,
+      userId: user._id,
       id: elem._id,
       name: elem.name,
       price: elem.price,
@@ -109,7 +109,9 @@ export default function Cart() {
       quantity: quantities[i],
     }));
     dispatch(addCheckOutInfo(checkoutInfo));
-    navigation.navigate('CheckOut');
+    if (cart.length) {
+      navigation.navigate('CheckOut');
+    }
   };
 
   return (

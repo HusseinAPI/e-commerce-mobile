@@ -1,5 +1,4 @@
 /* eslint-disable react-native/no-inline-styles */
-// CheckoutSummaryScreen.jsx
 import React from 'react';
 import {
   SafeAreaView,
@@ -12,6 +11,9 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ProductType } from '../types/productType';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
 import { RootState } from '../store';
 import { makeOrder, setCartEmpty } from '../store/productSlice';
 
@@ -31,6 +33,9 @@ export default function Checkout() {
 
   const total = Number(subtotal) + Number(taxes);
 
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+  const navigation = useNavigation<NavigationProp>();
   const dispatch = useAppDispatch();
 
   const renderProduct = ({ item }: { item: ProductType }) => (
@@ -88,6 +93,7 @@ export default function Checkout() {
             onPress={() => {
               dispatch(makeOrder(checkInfo));
               dispatch(setCartEmpty());
+              navigation.navigate('Profile');
             }}
           >
             Continue
@@ -103,7 +109,7 @@ const CARD_BG = '#ECECEC';
 const BG = '#F6F6F8';
 const TEXT = '#1C1C1C';
 const MUTED = '#6B6B6B';
-const PINK = '#a6aa53ff';
+const GREEN = '#a6aa53ff';
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: BG },
@@ -226,11 +232,16 @@ const styles = StyleSheet.create({
   },
   cta: {
     marginTop: 20,
-    backgroundColor: PINK,
+    backgroundColor: GREEN,
     paddingVertical: 16,
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ctaText: { color: 'white', fontWeight: '800', fontSize: 18 },
+  ctaText: {
+    color: 'white',
+    fontWeight: '800',
+    fontSize: 18,
+    paddingVertical: 12,
+  },
 });
