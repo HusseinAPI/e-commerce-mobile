@@ -56,10 +56,10 @@ const ProfileScreen = () => {
       {/* Profile Header */}
       <View style={styles.header}>
         <Image
-          source={require('../../../../assets/images/user1.jpg')}
+          source={require('../../../../assets/images/user.png')}
           style={styles.avatar}
         />
-        <Text style={styles.name}>Jack Robertson</Text>
+        <Text style={styles.name}>{user?.fullName}</Text>
       </View>
 
       {/* Menu List */}
