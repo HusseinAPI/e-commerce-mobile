@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,12 @@ import {
 } from 'react-native';
 import Product from '../components/Product';
 import Header from '../components/Header';
-import { getProducts, selectPage, visibleNavbar } from '../store/productSlice';
+import {
+  getProducts,
+  selectCategory,
+  selectPage,
+  visibleNavbar,
+} from '../store/productSlice';
 import { images } from '../../../../assets/images';
 import { RootState } from '../store';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -50,6 +55,15 @@ export default function Products() {
             product.category.trim().toLowerCase() ===
             selected.trim().toLowerCase(),
         );
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        // Runs when screen is unfocused (navigating away)
+        dispatch(selectCategory('All'));
+      };
+    }, []),
+  );
 
   // Select Products Icon in NavBar when open the page
 

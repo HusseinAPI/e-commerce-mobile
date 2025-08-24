@@ -26,6 +26,7 @@ import { images } from '../../../../assets/images';
 import { categoryIcons } from '../../../../assets/icons';
 import { RootState } from '../store';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { ProductType } from '../types/productType';
 
 export default function Home() {
   const products = useAppSelector(
@@ -71,22 +72,27 @@ export default function Home() {
   );
 
   // Search Field filteration
-
   const [searchValue, setSearchValue] = useState('');
-  let filterdedProducts = '';
+  const [filteredProducts, setFilteredProducts] = useState<ProductType[]>([]);
+  const [isSearching, setSearching] = useState(false);
 
-  const searchProduct = () => {
-    filterdedProducts =
-      searchValue === ''
-        ? []
-        : products.filter(
-            product =>
-              product.name.trim().toLowerCase() ===
-              searchValue.trim().toLowerCase(),
-          );
-
-    console.log(searchValue);
-  };
+  useEffect(() => {
+    if (searchValue.trim() === '') {
+      setFilteredProducts([]);
+      setSearching(false);
+    } else {
+      setFilteredProducts(
+        products.filter(product =>
+          product.name
+            .slice(0, 15)
+            .trim()
+            .toLowerCase()
+            .includes(searchValue.trim().toLowerCase()),
+        ),
+      );
+      setSearching(true);
+    }
+  }, [searchValue, products]);
 
   return (
     <>
@@ -100,7 +106,6 @@ export default function Home() {
             placeholderTextColor="#cdcdcdff"
             onChangeText={text => {
               setSearchValue(text);
-              searchProduct();
             }}
           />
           <SearchIcon
@@ -110,19 +115,19 @@ export default function Home() {
             style={{ marginTop: 8 }}
           />
         </View>
-        {filterdedProducts.length > 0 && (
+        {isSearching ? (
           <View style={styles.resultsContainer}>
-            <FlatList
-              data={filterdedProducts}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.resultItem}>
-                  <Text style={styles.resultText}>{item}</Text>
-                </TouchableOpacity>
-              )}
-            />
+            <ScrollView>
+              {filteredProducts.length
+                ? filteredProducts.map((prod, index) => (
+                    <TouchableOpacity key={index} style={styles.resultItem}>
+                      <Text style={styles.resultText}>{prod.name}</Text>
+                    </TouchableOpacity>
+                  ))
+                : null}
+            </ScrollView>
           </View>
-        )}
+        ) : null}
       </View>
 
       <View style={styles.list}>
@@ -197,7 +202,7 @@ export default function Home() {
                         key={index}
                         name={elem.name.substr(0, 15)}
                         price={elem.price}
-                        bckgColor="#8df1b0ff"
+                        bckgColor="#2ae86cff"
                         containerHeight={250}
                         imgSrc={images[elem.img]}
                         imgWidth={Number(elem.width)}
@@ -219,7 +224,7 @@ export default function Home() {
                         key={index}
                         name={elem.name.substr(0, 15)}
                         price={elem.price}
-                        bckgColor="#8df1b0ff"
+                        bckgColor="#2ae86cff"
                         containerHeight={250}
                         imgSrc={images[elem.img]}
                         imgWidth={Number(elem.width)}
@@ -262,15 +267,19 @@ const styles = StyleSheet.create({
   inputText: {
     padding: 10,
     width: '90%',
-    color: '#cdcdcdff',
+    color: '#5e5e5eff',
   },
   resultsContainer: {
-    marginTop: 5,
-    backgroundColor: '#fff',
+    top: 110,
+    backgroundColor: '#ffffffff',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
-    maxHeight: 200,
+    borderColor: '#edededff',
+    height: 400,
+    width: 325,
+    marginLeft: 5,
+    zIndex: 10,
+    paddingVertical: 10,
   },
   resultItem: {
     padding: 12,
@@ -279,7 +288,7 @@ const styles = StyleSheet.create({
   },
   resultText: {
     fontSize: 16,
-    color: '#333',
+    color: '#909090ff',
   },
   list: {
     marginLeft: 22,

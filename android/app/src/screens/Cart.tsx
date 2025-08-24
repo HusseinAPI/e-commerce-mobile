@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import {
@@ -7,6 +8,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import BackIcon from 'react-native-vector-icons/Feather';
 import TrashIcon from 'react-native-vector-icons/FontAwesome5';
@@ -97,6 +99,9 @@ export default function Cart() {
   const user = useAppSelector((state: RootState) => state.authSlice.user);
 
   const addCheckInfoHanlder = () => {
+    if (!user) {
+      return navigation.navigate('SignIn');
+    }
     const now = new Date();
     const date = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
 
@@ -147,23 +152,37 @@ export default function Cart() {
             renderItem={renderItem}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 10 }}
+            ListEmptyComponent={() => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginTop: 40,
+                }}
+              >
+                <Text
+                  style={{ fontSize: 26, fontWeight: 500, color: '#ffffffff' }}
+                >
+                  No products in cart
+                </Text>
+              </View>
+            )}
           />
         </View>
       </View>
 
       <View style={styles.footer}>
         <Text style={styles.total}>${subtotal.toFixed(2)}</Text>
-        <TouchableOpacity
-          style={styles.checkoutBtn}
-          onPress={() => navigation.navigate('CheckOut')}
+        <Pressable
+          onPress={() => {
+            addCheckInfoHanlder();
+          }}
+          style={({ pressed }) => [
+            styles.checkoutBtn,
+            pressed && { backgroundColor: '#8bc34a' },
+          ]}
         >
-          <Text
-            style={styles.checkoutText}
-            onPress={() => addCheckInfoHanlder()}
-          >
-            Check Out
-          </Text>
-        </TouchableOpacity>
+          <Text style={styles.checkoutText}>Check Out</Text>
+        </Pressable>
       </View>
     </View>
   );

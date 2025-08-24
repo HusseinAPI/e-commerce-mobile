@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectPage, visibleNavbar } from '../store/productSlice';
 import { logout } from '../store/authSlice';
 import { RootState } from '../store';
+import ConfirmModal from '../components/ConfirmModal';
 
 const ProfileScreen = () => {
   const menuItems = [
@@ -51,9 +52,15 @@ const ProfileScreen = () => {
     if (!user) navigation.navigate('SignIn');
   }, [user, navigation]);
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleLogout = () => {
+    setShowConfirm(false);
+    dispatch(logout());
+  };
+
   return (
     <ScrollView style={styles.container}>
-      {/* Profile Header */}
       <View style={styles.header}>
         <Image
           source={require('../../../../assets/images/user.png')}
@@ -62,7 +69,6 @@ const ProfileScreen = () => {
         <Text style={styles.name}>{user?.fullName}</Text>
       </View>
 
-      {/* Menu List */}
       <View style={styles.menuContainer}>
         {menuItems.map(item => (
           <TouchableOpacity
@@ -70,7 +76,7 @@ const ProfileScreen = () => {
             style={styles.menuItem}
             onPress={() => {
               item.path === 'logout'
-                ? dispatch(logout())
+                ? setShowConfirm(true)
                 : navigateTo(item.path);
             }}
           >
@@ -82,6 +88,14 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         ))}
       </View>
+      <ConfirmModal
+        visible={showConfirm}
+        message="Are you sure you want to logout?"
+        onCancel={() => {
+          setShowConfirm(false);
+        }}
+        onConfirm={() => handleLogout()}
+      />
     </ScrollView>
   );
 };

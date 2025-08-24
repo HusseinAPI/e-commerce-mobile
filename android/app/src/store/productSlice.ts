@@ -238,7 +238,7 @@ const productSlice = createSlice({
   reducers: {
     // Send Category from Home to Products
     selectCategory: (state, action) => {
-      state.categSelected = action.payload.trim().toLowerCase();
+      state.categSelected = action.payload;
     },
 
     // Select Page to change Navbar

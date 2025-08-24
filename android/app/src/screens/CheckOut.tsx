@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -16,6 +16,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
 import { RootState } from '../store';
 import { makeOrder, setCartEmpty } from '../store/productSlice';
+import ConfirmModal from '../components/ConfirmModal';
 
 export default function Checkout() {
   const checkInfo = useAppSelector(
@@ -49,6 +50,17 @@ export default function Checkout() {
       </View>
     </View>
   );
+
+  // Confirm Checkout
+
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+
+  const handleCheckOut = data => {
+    dispatch(makeOrder(data));
+    dispatch(setCartEmpty());
+    navigation.navigate('Profile');
+    setShowConfirm(false);
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -87,18 +99,21 @@ export default function Checkout() {
           <Text style={[styles.rowValue, styles.bold]}>${total}</Text>
         </View>
 
-        <TouchableOpacity activeOpacity={0.9} style={styles.cta}>
-          <Text
-            style={styles.ctaText}
-            onPress={() => {
-              dispatch(makeOrder(checkInfo));
-              dispatch(setCartEmpty());
-              navigation.navigate('Profile');
-            }}
-          >
-            Continue
-          </Text>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={styles.cta}
+          onPress={() => setShowConfirm(true)}
+        >
+          <Text style={styles.ctaText}>Continue</Text>
         </TouchableOpacity>
+        <ConfirmModal
+          visible={showConfirm}
+          message="Are you sure you want to Confirm this Order?"
+          onCancel={() => {
+            setShowConfirm(false);
+          }}
+          onConfirm={() => handleCheckOut(checkInfo)}
+        />
       </View>
     </SafeAreaView>
   );
