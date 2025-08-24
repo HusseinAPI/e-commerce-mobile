@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
@@ -124,6 +125,20 @@ export default function Favourite() {
             keyExtractor={item => item._id}
             renderItem={renderItem}
             contentContainerStyle={{ paddingBottom: 20 }}
+            ListEmptyComponent={() => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginTop: 40,
+                }}
+              >
+                <Text
+                  style={{ fontSize: 26, fontWeight: 500, color: '#ffffffff' }}
+                >
+                  No products in Watchlist
+                </Text>
+              </View>
+            )}
           />
         </View>
       </View>

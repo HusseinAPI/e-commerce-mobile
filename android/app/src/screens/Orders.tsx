@@ -26,7 +26,7 @@ const OrderHistory = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getOrders(user._id));
+    dispatch(getOrders(user?._id));
   }, [dispatch, user?.token]);
 
   const renderItem = ({ item }: { item: OrderType; index: number }) => (
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 12,
-    color: '#999',
+    color: '#a6aa53ff',
     marginTop: 15,
   },
 });

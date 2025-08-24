@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { View, StyleSheet, Pressable, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import HeartIcon from 'react-native-vector-icons/FontAwesome';
@@ -52,7 +52,7 @@ const navItems: NavItem[] = [
   },
   {
     key: 'user',
-    path: 'Profile',
+    path: 'SignIn',
     IconComponent: UserIcon,
     iconName: 'user',
     size: 23,

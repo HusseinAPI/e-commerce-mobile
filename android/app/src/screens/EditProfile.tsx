@@ -10,20 +10,27 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Pressable,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
 import { RootState } from '../store';
 import { updateUserInfo } from '../store/authSlice';
 
 export default function ProfileScreen() {
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+  const navigation = useNavigation<NavigationProp>();
+
   const user = useAppSelector((state: RootState) => state.authSlice.user);
 
   const [isEditing, SetEditng] = useState<boolean>(false);
 
-  const [name, setName] = useState<string>(user.fullName || '');
-  const [phone, setPhone] = useState<string>(user.phone);
-  const [email, setEmail] = useState<string>(user.email);
+  const [name, setName] = useState<string>(user?.fullName || '');
+  const [phone, setPhone] = useState<string>(user?.phone);
+  const [email, setEmail] = useState<string>(user?.email);
 
   const dispatch = useAppDispatch();
 
@@ -47,11 +54,15 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header*/}
       <View style={styles.header}>
-        <View style={styles.arrowContainer}>
-          <Icon name="arrow-back" size={24} color="#a6aa53ff" />
-        </View>
+        <Pressable
+          onPress={() => navigation.goBack()}
+          style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
+        >
+          <View style={styles.arrowContainer}>
+            <Icon name="arrow-back" size={24} color="#a6aa53ff" />
+          </View>
+        </Pressable>
         <Text style={styles.profileText}>Profile</Text>
         {isEditing ? (
           <Icon
@@ -72,7 +83,6 @@ export default function ProfileScreen() {
         )}
       </View>
 
-      {/* Profile Image */}
       <View style={styles.imageContainer}>
         <Image
           source={require('../../../../assets/images/user.png')}
@@ -175,8 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    left: 20,
-    top: 30,
+    right: 100,
     zIndex: 10,
   },
   profileText: {
