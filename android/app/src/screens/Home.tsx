@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   FlatList,
   Pressable,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import SearchIcon from 'react-native-vector-icons/Feather';
 import Product from '../components/Product';
@@ -69,6 +70,24 @@ export default function Home() {
     }, [dispatch]),
   );
 
+  // Search Field filteration
+
+  const [searchValue, setSearchValue] = useState('');
+  let filterdedProducts = '';
+
+  const searchProduct = () => {
+    filterdedProducts =
+      searchValue === ''
+        ? []
+        : products.filter(
+            product =>
+              product.name.trim().toLowerCase() ===
+              searchValue.trim().toLowerCase(),
+          );
+
+    console.log(searchValue);
+  };
+
   return (
     <>
       <View style={styles.card}>
@@ -79,6 +98,10 @@ export default function Home() {
             style={styles.inputText}
             placeholder="Search..."
             placeholderTextColor="#cdcdcdff"
+            onChangeText={text => {
+              setSearchValue(text);
+              searchProduct();
+            }}
           />
           <SearchIcon
             name="search"
@@ -87,6 +110,19 @@ export default function Home() {
             style={{ marginTop: 8 }}
           />
         </View>
+        {filterdedProducts.length > 0 && (
+          <View style={styles.resultsContainer}>
+            <FlatList
+              data={filterdedProducts}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity style={styles.resultItem}>
+                  <Text style={styles.resultText}>{item}</Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        )}
       </View>
 
       <View style={styles.list}>
@@ -227,6 +263,23 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '90%',
     color: '#cdcdcdff',
+  },
+  resultsContainer: {
+    marginTop: 5,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    maxHeight: 200,
+  },
+  resultItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  resultText: {
+    fontSize: 16,
+    color: '#333',
   },
   list: {
     marginLeft: 22,

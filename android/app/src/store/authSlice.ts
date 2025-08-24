@@ -58,6 +58,36 @@ export const signUp = createAsyncThunk(
   },
 );
 
+export const updateUserInfo = createAsyncThunk(
+  'auth/updateUserInfo',
+  async (data, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const req = await fetch(
+        `http://192.168.88.226:3001/users/${data.userId}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer${data.token}`,
+          },
+        },
+      );
+      const res = await req.json();
+      return res;
+    } catch (error) {
+      if (error instanceof Error) {
+        rejectWithValue(error);
+        rejectWithValue(error.message);
+      } else {
+        console.log(error);
+        rejectWithValue(error);
+      }
+    }
+  },
+);
+
 const initialState = {
   user: null,
   profileImg: null,
@@ -82,6 +112,9 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(signUp.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(updateUserInfo.fulfilled, (state, action) => {
         state.user = action.payload;
       }),
 });
